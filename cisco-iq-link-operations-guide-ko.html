@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cisco IQ Link 운영 가이드 v1.1.1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; color: #1a1a1a; background: #f5f6fa; display: flex; min-height: 100vh; }
+  
+  /* Sidebar */
+  #sidebar { width: 270px; min-width: 270px; background: #003a54; color: #fff; position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 0; flex-shrink: 0; }
+  #sidebar .logo { background: #00bceb; padding: 16px 20px; font-size: 16px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+  #sidebar .logo span { display: block; font-size: 11px; font-weight: 400; opacity: 0.85; margin-top: 2px; }
+  #sidebar nav { padding: 12px 0; }
+  #sidebar nav a { display: block; padding: 7px 20px; color: #c8dde8; text-decoration: none; font-size: 13px; border-left: 3px solid transparent; transition: all 0.15s; line-height: 1.4; }
+  #sidebar nav a:hover { background: rgba(255,255,255,0.08); color: #fff; border-left-color: #00bceb; }
+  #sidebar nav a.sub { padding-left: 32px; font-size: 12px; color: #a0bfcf; }
+  #sidebar nav a.sub2 { padding-left: 44px; font-size: 11.5px; color: #8aafc0; }
+  #sidebar nav .section-title { padding: 14px 20px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 1.2px; color: #5a8aa0; font-weight: 600; }
+
+  /* Main content */
+  #main { flex: 1; padding: 32px 40px; max-width: 960px; }
+  
+  h1 { font-size: 26px; color: #003a54; margin-bottom: 6px; }
+  .doc-meta { color: #666; font-size: 13px; margin-bottom: 32px; padding-bottom: 16px; border-bottom: 2px solid #00bceb; }
+  
+  h2 { font-size: 20px; color: #003a54; margin: 36px 0 12px; padding: 10px 16px; background: #e8f4fb; border-left: 4px solid #00bceb; border-radius: 2px; }
+  h3 { font-size: 16px; color: #005073; margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 1px solid #c8dde8; }
+  h4 { font-size: 14px; color: #006c8f; margin: 18px 0 8px; font-weight: 600; }
+  h5 { font-size: 13px; color: #333; margin: 14px 0 6px; font-weight: 600; }
+  
+  p { margin-bottom: 10px; line-height: 1.7; }
+  ul, ol { margin: 8px 0 12px 24px; }
+  li { margin-bottom: 5px; line-height: 1.6; }
+  
+  /* Note / Warning boxes */
+  .note { background: #fffbea; border-left: 4px solid #f5a623; padding: 10px 14px; margin: 12px 0; border-radius: 2px; font-size: 13px; }
+  .note strong { color: #b87e00; }
+  .warning { background: #fff0f0; border-left: 4px solid #d0021b; padding: 10px 14px; margin: 12px 0; border-radius: 2px; font-size: 13px; }
+  .warning strong { color: #d0021b; }
+  .info { background: #e8f4fb; border-left: 4px solid #00bceb; padding: 10px 14px; margin: 12px 0; border-radius: 2px; font-size: 13px; }
+  
+  /* Code blocks */
+  pre { background: #1e2a35; color: #a8d8ea; padding: 14px 16px; border-radius: 4px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12.5px; overflow-x: auto; margin: 10px 0 14px; line-height: 1.5; }
+  code { font-family: 'Consolas', 'Courier New', monospace; background: #e8f0f5; padding: 1px 5px; border-radius: 3px; font-size: 12.5px; color: #005073; }
+  pre code { background: none; padding: 0; color: inherit; }
+  
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 16px; font-size: 13px; }
+  thead tr { background: #003a54; color: #fff; }
+  thead td, thead th { padding: 9px 12px; font-weight: 600; text-align: left; }
+  tbody tr:nth-child(even) { background: #f0f7fb; }
+  tbody tr:hover { background: #ddeef5; }
+  td, th { padding: 8px 12px; border: 1px solid #ccdde8; vertical-align: top; }
+  .table-caption { font-weight: 600; color: #003a54; font-size: 13px; margin-bottom: 4px; margin-top: 14px; }
+
+  /* Images */
+  .img-wrap { margin: 14px 0; }
+  .img-wrap img { max-width: 700px; width: 100%; border: 1px solid #c8dde8; border-radius: 3px; display: block; }
+  .img-caption { font-size: 12px; color: #666; margin-top: 4px; font-style: italic; }
+
+  /* Checklist */
+  .checklist { list-style: none; margin-left: 0; }
+  .checklist li { padding: 4px 0 4px 22px; position: relative; }
+  .checklist li::before { content: '☐'; position: absolute; left: 0; color: #00bceb; }
+
+  /* Revision history */
+  .revision-table { margin-top: 40px; }
+
+  /* Scrollbar */
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: #002d42; }
+  #sidebar::-webkit-scrollbar-thumb { background: #00bceb; border-radius: 2px; }
+
+  @media (max-width: 768px) {
+    body { flex-direction: column; }
+    #sidebar { width: 100%; height: auto; position: relative; }
+    #main { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="sidebar">
+  <div class="logo">Cisco IQ Link<span>운영 가이드 v1.1.1</span></div>
+  <nav>
+    <a href="#intro">1. 소개</a>
+    <a href="#local-auth">2. Local Authentication</a>
+    <a class="sub" href="#local-admin-security">2.1 Local Admin Security 설정</a>
+    <a class="sub2" href="#security-questions">2.1.1 보안 질문 설정</a>
+    <a class="sub2" href="#passwords">2.1.2 비밀번호 관리</a>
+    <a href="#idp">3. Identity Provider 구성</a>
+    <a class="sub" href="#okta-saml">3.1 Okta IDP SAML SSO</a>
+    <a class="sub2" href="#adding-idp">IDP 추가</a>
+    <a class="sub2" href="#role-mapping-okta">Role Mapping 구성</a>
+    <a class="sub2" href="#slo">Single Logout 구성</a>
+    <a class="sub2" href="#troubleshoot-idp">IDP 문제 해결</a>
+    <a class="sub" href="#adfs-saml">3.2 ADFS IDP SAML SSO</a>
+    <a class="sub2" href="#adfs-servers">ADFS 서버 구성</a>
+    <a class="sub2" href="#adfs-claims">ADFS Claim Rules 구성</a>
+    <a class="sub2" href="#adfs-cert">SP Signing Certificate 신뢰 구성</a>
+    <a class="sub2" href="#adfs-metadata">ADFS Metadata 내보내기</a>
+    <a class="sub2" href="#adfs-idp">ADFS IDP 추가</a>
+    <a class="sub2" href="#adfs-role">Role Mapping 구성</a>
+    <a class="sub2" href="#adfs-verify">검증 및 테스트</a>
+    <a class="sub2" href="#troubleshoot-adfs">ADFS 문제 해결</a>
+    <a href="#scp">4. SCP 서버 추가</a>
+    <a href="#system-mgmt">5. System Management 업데이트</a>
+    <a class="sub" href="#reschedule">5.1 업데이트 일정 변경</a>
+    <a class="sub" href="#manual-upgrade">5.2 수동 시스템 업그레이드</a>
+    <a href="#ssl">6. SSL Certificates 구성</a>
+    <a href="#syslog">7. Syslog 서버 구성</a>
+    <a href="#activity">8. Activity &amp; Logs</a>
+    <a href="#iq-connectivity">9. IQ Connectivity</a>
+    <a href="#connection-mgmt">10. Connection Management</a>
+    <a class="sub" href="#credentials">10.1 Credentials 추가</a>
+    <a class="sub" href="#catalyst">10.2 Catalyst Center 데이터 수집</a>
+    <a class="sub" href="#direct">10.3 Direct Connection</a>
+    <a class="sub" href="#scheduling">10.4 Scheduling</a>
+    <a href="#banners">11. Banners</a>
+    <a href="#troubleshooting">12. Troubleshooting</a>
+  </nav>
+</nav>
+
+<div id="main">
+  <h1>Cisco IQ Link 운영 가이드</h1>
+  <div class="doc-meta">버전 v1.1.1 &nbsp;|&nbsp; 출처: <a href="https://www.cisco.com/c/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1.html" target="_blank">Cisco Support Documentation</a> &nbsp;|&nbsp; 한국어 번역본</div>
+
+  <!-- 1. Introduction -->
+  <h2 id="intro">1. 소개 (Introduction)</h2>
+  <p>Cisco IQ™는 자산 가시성 향상, 스마트한 인사이트 제공, 케이스 관리 간소화를 위한 기능을 고객에게 제공합니다. Cisco IQ AI Assistant와 같은 AI 기능은 운영 성과를 최적화하고, 사용자가 선제적이고 정보에 기반한 결정을 내릴 수 있도록 지원하며, 고객 참여 및 성공을 위한 프로세스를 간소화합니다.</p>
+  <p>Cisco IQ Link는 온프레미스 네트워크에서 자산 텔레메트리를 안전하게 수집하고 Cisco IQ로 전송하여, AI 기반 예측 인사이트를 통해 네트워크 가시성을 향상시키고, 장애를 사전에 예측하며, 운영 효율성을 높일 수 있도록 지원합니다.</p>
+
+  <!-- 2. Local Authentication -->
+  <h2 id="local-auth">2. Local Authentication (로컬 인증)</h2>
+  <p>Administrator는 다음 자격 증명을 사용하여 Cisco IQ Link에 로그인합니다:</p>
+  <ul>
+    <li><strong>Default Username</strong>: admin</li>
+    <li><strong>Default Password</strong>: Cisco IQ Link 설치 과정에서 설정한 비밀번호 (자세한 내용은 <em>Cisco IQ Link Getting Started Guide</em> 참조)</li>
+  </ul>
+  <p>로그인 후 기본 사용자 "admin"과 계정명 "Default-Customer"가 홈 페이지에 표시됩니다.</p>
+
+  <h3 id="local-admin-security">2.1 Local Admin Security 설정</h3>
+  <p><strong>System Configuration</strong>의 <strong>Local Admin Security</strong> 메뉴에서 비밀번호를 변경하거나 보안 질문을 설정할 수 있습니다.</p>
+  <div class="info"><p>10분 이내에 비밀번호를 3번 잘못 입력하면 계정이 60분 동안 잠깁니다. 잠금 기간 중에는 로그인을 시도할 수 없으며, 시스템에 다음 메시지가 표시됩니다: <em>"Account locked due to too many failed attempts. Please try again later."</em> (잠금 해제 시간 포함). 60분 후 자동으로 잠금이 해제됩니다.</p></div>
+
+  <h4 id="security-questions">2.1.1 보안 질문 및 답변 설정 (Setting Up Security Questions and Answers)</h4>
+  <p>보안 질문은 비밀번호를 분실했을 때 본인 확인에 사용됩니다. 비밀번호 재설정 기능을 활성화하려면 Administrator가 5개의 보안 질문에 대한 답변을 설정해야 합니다. 이는 최초 1회만 수행하면 됩니다.</p>
+  <p>보안 질문 설정 방법:</p>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>Local Admin Security</strong> &gt; <strong>Security Questions</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-00.png" alt="Security Questions"><div class="img-caption">Security Questions</div></div>
+    </li>
+    <li><p><strong>Configure security questions</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-01.png" alt="Security Questions"><div class="img-caption">Security Questions 구성</div></div>
+    </li>
+    <li>드롭다운 목록에서 5개의 보안 질문 선택</li>
+    <li>각 질문에 대한 답변 입력</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+  <div class="note"><strong>Notes</strong><br>
+  • 답변은 대소문자를 구분하지 않습니다 (예: "SMITH"와 "smith"는 동일)<br>
+  • 앞뒤 공백은 무시됩니다 (" Smith "와 "Smith"는 동일 처리)<br>
+  • 답변을 업데이트할 경우, 이전 답변이 모두 교체되므로 변경하고 싶은 항목뿐만 아니라 5개 모두 다시 입력해야 합니다.</div>
+
+  <h4 id="passwords">2.1.2 비밀번호 관리 (Managing Passwords)</h4>
+  <p>Cisco IQ의 비밀번호는 로컬 Administrator만 관리할 수 있습니다.</p>
+  <h5>사전 조건 (Prerequisites)</h5>
+  <ul>
+    <li>로컬 Administrator 권한 보유</li>
+    <li>로컬 Administrator 계정 사용 (SSO 또는 외부 인증 아님)</li>
+    <li>Cisco IQ에 로그인된 상태</li>
+    <li>현재 비밀번호 알고 있음</li>
+  </ul>
+  <h5>비밀번호 변경 (Changing Passwords)</h5>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>Local Admin Security</strong> &gt; <strong>Change Password</strong> 이동</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-02.png" alt="Change Password"><div class="img-caption">Change Password</div></div>
+    </li>
+    <li>현재 <strong>Password</strong> 입력</li>
+    <li><strong>New password</strong> 입력</li>
+    <li>확인을 위해 새 비밀번호 재입력</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+  <p>변경된 비밀번호는 Cisco IQ Virtual Machine(VM)을 포함한 Cisco IQ 시스템 전체에 적용됩니다.</p>
+
+  <h5>잊어버린 비밀번호 재설정 (Resetting a Forgotten Password)</h5>
+  <p>보안 질문을 사전에 설정해 둔 경우, 보안 질문 인증 절차를 통해 비밀번호를 재설정할 수 있습니다.</p>
+  <ol>
+    <li>Cisco IQ Link 로그인 페이지로 이동</li>
+    <li><p><strong>Forgot Password</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-03.png" alt="Forgot Password"><div class="img-caption">Forgot Password</div></div>
+    </li>
+    <li><strong>Username</strong> 입력</li>
+    <li><p><strong>Continue</strong> 클릭 → <strong>Verify Identity</strong> 페이지에서 사전 설정된 5개 중 무작위 3개의 보안 질문이 표시됩니다.</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-04.png" alt="Verify Identity"><div class="img-caption">Verify Identity</div></div>
+      <div class="note"><strong>Note</strong>: 표시되는 보안 질문은 사용자마다 다릅니다.</div>
+    </li>
+    <li>표시된 3개 질문 모두 답변 입력</li>
+    <li><p><strong>Verify</strong> 클릭 → 답변이 일치하면 새 비밀번호 입력 화면으로 이동</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-05.png" alt="Reset Password"><div class="img-caption">Reset Password</div></div>
+    </li>
+  </ol>
+  <div class="note"><strong>Notes</strong><br>
+  • 10분 이내에 보안 질문 답변을 3번 틀리면 계정이 60분 동안 잠깁니다.<br>
+  • 잠금 기간 중 메시지: <em>"Account locked due to too many failed verification attempts. Please try again later."</em><br>
+  • 60분 후 자동 잠금 해제됩니다.</div>
+  <ol start="7">
+    <li><strong>New password</strong> 입력</li>
+    <li>비밀번호 재입력 (확인)</li>
+    <li><strong>Submit</strong> 클릭</li>
+  </ol>
+
+  <!-- 3. Identity Provider -->
+  <h2 id="idp">3. Identity Provider 구성 (Configuring Identity Provider)</h2>
+  <p>Cisco IQ Link에 로그인한 후 Administrator는 다양한 설정을 구성할 수 있습니다. 로컬 관리 또는 Identity Provider(IDP) 구성을 통해 Cisco IQ Link에 로그인할 수 있습니다.</p>
+
+  <h3 id="okta-saml">3.1 Okta IDP SAML SSO 구성</h3>
+  <h4>사전 조건 (Prerequisites)</h4>
+  <ul>
+    <li>Cisco IQ Link 로컬 Administrator 접근 권한</li>
+    <li>IDP 포털 접근 권한</li>
+  </ul>
+  <h4>IDP SAML SSO 구성</h4>
+  <p>SSO를 위한 IDP Security Assertion Markup Language(SAML) 구성 방법:</p>
+  <ol>
+    <li>IDP 포털로 이동</li>
+    <li>Cisco IQ Link 인스턴스에 다음 속성을 설정합니다.</li>
+  </ol>
+  <p class="table-caption">Cisco IQ Link Attributes</p>
+  <table>
+    <thead><tr><td>Field</td><td>Value</td></tr></thead>
+    <tbody>
+      <tr><td>Application Name</td><td>&lt;Application Name&gt;</td></tr>
+      <tr><td>Environment</td><td>ESP Business Application</td></tr>
+      <tr><td>Application Owner Groups</td><td>IDP 설정의 소유자</td></tr>
+      <tr><td>Team Mailer</td><td>팀 메일러</td></tr>
+      <tr><td>Audience</td><td>Non-Workforce</td></tr>
+      <tr><td>Onboarding Category</td><td>"New Onboarding" 선택</td></tr>
+    </tbody>
+  </table>
+  <p class="table-caption">SAML Configuration Parameters</p>
+  <table>
+    <thead><tr><td>Parameter</td><td>Configuration</td><td>Example</td></tr></thead>
+    <tbody>
+      <tr><td>Audience (Entity ID)</td><td>FQDN name</td><td>mymanagementhost.mydomain.com</td></tr>
+      <tr><td>Single Sign-On URL</td><td>SAML ACS endpoint</td><td>https://mymanagementhost.mydomain.com/saml/acs</td></tr>
+      <tr><td>Name ID Format</td><td>Email Address</td><td>NA</td></tr>
+      <tr><td>Application Username</td><td>Username</td><td>NA</td></tr>
+    </tbody>
+  </table>
+  <ol start="3">
+    <li>다음 필수 attribute statement를 구성합니다.</li>
+  </ol>
+  <div class="note"><strong>Note</strong>: IDP attribute 변경은 특정 공급자 및 구성에 따라 다릅니다. 아래는 Cisco IDP의 attribute 예시입니다.</div>
+  <ul>
+    <li><strong>First Entry</strong>: Name: <code>Username</code> / Value: <code>user.login</code></li>
+    <li><strong>Second Entry</strong>: Name: <code>Primary email</code> / Value: <code>user.email</code></li>
+    <li><strong>Group Attribute Statements</strong>: Name: <code>groups</code> / Filter: <code>REGEX</code> / Value: <code>.*</code></li>
+  </ul>
+  <ol start="4">
+    <li>Single Logout(SLO) 설정을 구성합니다.</li>
+  </ol>
+  <p class="table-caption">SLO Configuration Settings</p>
+  <table>
+    <thead><tr><td>Field</td><td>Value</td></tr></thead>
+    <tbody>
+      <tr><td>Signature Certificate</td><td>Okta의 경우 SLO를 활성화할 때만 필요. <strong>Identity Providers</strong>에서 <strong>Download SP Certificate</strong>를 사용하여 다운로드. <em>sp-public-key.crt</em>로 저장.</td></tr>
+      <tr><td>SP metadata</td><td>ADFS IDP에만 필요 (Okta에는 불필요)</td></tr>
+      <tr><td>Single Logout 활성화 여부</td><td>Yes 또는 No</td></tr>
+      <tr><td>Single Logout URL</td><td>https://mymanagementhost.mydomain.com/saml/logout</td></tr>
+      <tr><td>SP Issuer</td><td>https://mymanagementhost.mydomain.com</td></tr>
+    </tbody>
+  </table>
+  <ol start="5">
+    <li><strong>Download</strong> 아이콘을 클릭하여 "SP Metadata" 파일 다운로드</li>
+    <li>공급자의 요구사항에 따라 애플리케이션 프로비저닝 또는 생성</li>
+  </ol>
+
+  <h4 id="adding-idp">IDP 추가 (Adding IDP)</h4>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>Identity Providers</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-06.png" alt="IDP Home page"><div class="img-caption">IDP Home page</div></div>
+    </li>
+    <li><p><strong>Add Identity Provider</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-07.png" alt="Add Identity Provider"><div class="img-caption">Add Identity Provider</div></div>
+      <div class="note"><strong>Note</strong>: 한 번에 1개의 IDP만 추가할 수 있습니다.</div>
+    </li>
+    <li>Identity provider 이름 입력</li>
+    <li><strong>Add</strong>를 클릭하여 <strong>Domains</strong> 필드에 Cisco IQ Link 구성 도메인명 추가</li>
+    <li><strong>Organization IDP metadata</strong> 필드에 IDP 애플리케이션에서 얻은 SAML metadata 파일을 드래그 앤 드롭하거나 업로드 (인증서 정보 및 Service Provider(SP) 엔티티 정보 포함)</li>
+    <li>(선택 사항) <strong>Enable single logout</strong> 토글 버튼 켜기</li>
+    <li><strong>Save</strong> 클릭</li>
+    <li><p>구성 완료 후 로그인 페이지에 SSO(IDP 경유) 로그인 옵션 표시됨</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-08.png" alt="Cisco IQ Link Login"><div class="img-caption">Cisco IQ Link Login (SSO 옵션 포함)</div></div>
+    </li>
+  </ol>
+
+  <h4 id="role-mapping-okta">Role Mapping 구성 (Role Mapping Configuration)</h4>
+  <ol>
+    <li><p>추가된 IDP에서 <strong>More Options</strong> 아이콘 &gt; <strong>Map Roles</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-09.png" alt="User Role Mapping"><div class="img-caption">User Role Mapping</div></div>
+    </li>
+    <li>선택한 <strong>System role</strong>에 <strong>IDP role</strong> 입력. 지원되는 시스템 Role:
+      <ul>
+        <li><code>general_account_administrator</code>: 제품의 모든 작업을 수행할 수 있는 전체 권한</li>
+        <li><code>general_account_viewer</code>: 읽기 전용 접근 권한</li>
+      </ul>
+    </li>
+  </ol>
+  <div class="note"><strong>Note</strong>: IDP role은 자유 텍스트 필드로, 조직의 IDP에 구성된 그룹 또는 역할 이름과 정확히 일치해야 합니다.</div>
+  <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-10.png" alt="Role Mapping Reference"><div class="img-caption">Role Mapping Reference (Okta 그룹 예시)</div></div>
+  <ol start="3">
+    <li>필요한 경우 <strong>Add identity provider role</strong>을 클릭하여 추가 Role 매핑</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+
+  <h4 id="slo">Single Logout 구성 (Single Logout Configuration)</h4>
+  <p>SLO를 활성화하려면 SLO URL이 포함된 메타데이터를 업로드해야 합니다. Identity Provider 설정을 편집하고 <strong>Enable Single Log Out</strong> 토글을 켜서 구성합니다.</p>
+  <ol>
+    <li><p><strong>Identity Providers</strong> 페이지에서 <strong>Download SP public certificate</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-11.png" alt="Download Public Certificate"><div class="img-caption">Download Public Certificate</div></div>
+    </li>
+    <li>다운로드한 파일을 <em>sp-public-key.crt</em>로 저장</li>
+    <li>IDP 포털로 이동</li>
+    <li>서명 인증서 파일 업로드</li>
+    <li>IDP 메타데이터 파일 재다운로드</li>
+    <li><p><strong>Identity Providers</strong> 페이지에서 추가된 IDP의 <strong>More Options</strong> 아이콘 &gt; <strong>Edit</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-12.png" alt="Edit Identity Provider"><div class="img-caption">Edit Identity Provider</div></div>
+    </li>
+    <li><strong>Enable single log out (SLO)</strong> 토글 버튼 켜기</li>
+    <li>새로 다운로드한 메타데이터 파일 업로드</li>
+    <li>다음 체크리스트를 사용하여 SSO 및 SLO 기능 확인:</li>
+  </ol>
+  <p><strong>Verification Checklist:</strong></p>
+  <ul class="checklist">
+    <li>로컬 Administrator 로그인 성공</li>
+    <li>IDP 포털이 구성 및 프로비저닝됨</li>
+    <li>IDP가 "Success" 상태로 Cisco IQ에 추가됨</li>
+    <li>Role 매핑이 구성 및 테스트됨</li>
+    <li>SP metadata가 다운로드되고 인증서가 추출됨</li>
+    <li>SLO 활성화 시, 실제 서명 인증서로 SLO 구성 완료</li>
+    <li>End-to-end SSO/SLO 플로우 테스트 성공</li>
+  </ul>
+
+  <h4 id="troubleshoot-idp">IDP 문제 해결 (Troubleshooting IDP Issues)</h4>
+  <p class="table-caption">IDP 문제 해결</p>
+  <table>
+    <thead><tr><td>문제 (Issue)</td><td>해결 방법 (Solution)</td></tr></thead>
+    <tbody>
+      <tr><td><strong>IDP 상태가 "Incomplete"로 표시</strong></td><td>Role Mapping 구성 확인</td></tr>
+      <tr><td><strong>Certificate 오류</strong></td><td>인증서 형식 및 유효성 확인</td></tr>
+      <tr><td><strong>SSO 로그인 실패</strong></td><td>Attribute 매핑 및 그룹 할당 검증</td></tr>
+      <tr><td><strong>SLO가 예상대로 작동하지 않음</strong></td><td>인증서가 올바르게 업로드되었는지 및 SLO URL이 구성되었는지 확인</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 3.2 ADFS -->
+  <h3 id="adfs-saml">3.2 ADFS IDP SAML SSO 구성</h3>
+  <p>이 섹션에서는 Microsoft Active Directory Federation Services(ADFS)를 Cisco IQ의 SAML IDP로 구성하는 방법을 안내합니다.</p>
+  <h4>사전 조건 (Prerequisites)</h4>
+  <ul>
+    <li>ADFS 6.0 이상 권장</li>
+    <li>Windows Server 2012 R2 이상</li>
+    <li>Active Directory 연동 구성 완료</li>
+    <li>ADFS에 SSL/TLS 인증서 설치</li>
+    <li>Cisco IQ Administrator 접근 권한</li>
+    <li>ADFS 서버(Windows Server)에 대한 관리자 접근 권한</li>
+    <li>ADFS 서버의 PowerShell 접근 권한</li>
+    <li>ADFS와 Cisco IQ 간의 네트워크 연결</li>
+    <li>ADFS 서버 구성 정보 (아래 표 참조)</li>
+  </ul>
+  <p class="table-caption">ADFS Server Configuration</p>
+  <table>
+    <thead><tr><td>항목 (Item)</td><td>설명 (Description)</td><td>예시 (Example)</td></tr></thead>
+    <tbody>
+      <tr><td><strong>Cisco IQ FQDN</strong></td><td>사용자 배포 호스트명</td><td>devxx-23.cx-xxx-xxx.cisco.com</td></tr>
+      <tr><td><strong>ADFS Server URL</strong></td><td>사용자 ADFS 서버 주소</td><td>https://ad-fs.dev.local</td></tr>
+      <tr><td><strong>Company Domain</strong></td><td>이메일 도메인</td><td>company.com</td></tr>
+      <tr><td><strong>AD Groups</strong></td><td>Active Directory 그룹 Domain Name(DN)</td><td>CN=Role - CXIQ Developers</td></tr>
+    </tbody>
+  </table>
+
+  <h4 id="adfs-servers">ADFS 서버 구성 (Configuring ADFS Servers)</h4>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>Identity Providers</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-13.png" alt="Download Options"><div class="img-caption">Download Options</div></div>
+    </li>
+    <li><strong>Download SP public certificate</strong> 및 <strong>Download SP metadata</strong>를 클릭하여 파일 다운로드</li>
+    <li><em>service-provider-metadata.xml</em> 및 <em>service-provider-certificate.crt</em> 파일을 ADFS 디렉터리에 저장 (예: C:\)</li>
+    <li>ADFS 서버에 로그인</li>
+    <li><strong>ADFS Management</strong> 메뉴에서 <strong>Relying Party Trusts</strong> 클릭</li>
+    <li><strong>Add Relying Party Trusts</strong> 클릭 → 새 마법사 열림</li>
+    <li><strong>Claims Aware</strong> 라디오 버튼 선택</li>
+    <li><strong>Start</strong> 클릭하여 구성 진행</li>
+    <li><strong>Import data about the relying party from a file</strong> 클릭</li>
+    <li><strong>Browse</strong>를 클릭하여 서비스 공급자 메타데이터 파일 선택 및 업로드</li>
+    <li><strong>Next</strong> 클릭</li>
+    <li>표시 이름 입력 (예: "CIQ-Stage"), 관련 메모 추가 후 <strong>Next</strong> 클릭</li>
+    <li><strong>Choose Access Control Policy</strong> 페이지에서 <strong>Permit everyone</strong> 클릭 (또는 조직 보안 정책 선택)</li>
+    <li>나머지 화면에서 <strong>Next</strong> 클릭</li>
+    <li><strong>Close</strong>를 클릭하여 Relying Party Trust 구성 완료</li>
+  </ol>
+
+  <h4 id="adfs-claims">ADFS Claim Rules 구성 (Configuring ADFS Claim Rules)</h4>
+  <h5>필수 Claims (Required Claims)</h5>
+  <p class="table-caption">Required Claims</p>
+  <table>
+    <thead><tr><td>Claim</td><td>목적 (Purpose)</td><td>소스 (Source)</td></tr></thead>
+    <tbody>
+      <tr><td><strong>Email</strong></td><td>사용자 식별자</td><td>AD Mail</td></tr>
+      <tr><td><strong>Display Name</strong></td><td>사용자 전체 이름</td><td>AD Display Name</td></tr>
+      <tr><td><strong>NameID</strong></td><td>SAML subject</td><td>이메일에서 변환</td></tr>
+      <tr><td><strong>Groups</strong></td><td>Role 기반 접근</td><td>AD Group Membership (memberOf)</td></tr>
+    </tbody>
+  </table>
+  <h5>Claim Rules 적용 (Applying Claim Rules)</h5>
+  <p>1. Relying Party Trust 이름 정의:</p>
+  <pre><code>$relyingPartyName = "Cisco IQ - Stage"</code></pre>
+  <p>2. 사용자 정보 및 그룹 멤버십을 Cisco IQ로 보내기 위한 Claim Rules 정의:</p>
+  <pre><code>$claimRules = @'
+@RuleTemplate = "LdapClaims"
+@RuleName = "Send Email and Name"
+c:[Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname", Issuer == "AD AUTHORITY"]
+=> issue(store = "Active Directory", types = ("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress", "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"), query = ";mail,displayName;{0}", param = c.Value);
+
+@RuleName = "Transform Email to NameID"
+c:[Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]
+=> issue(Type = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", Issuer = c.Issuer, OriginalIssuer = c.OriginalIssuer, Value = c.Value, ValueType = c.ValueType, Properties["http://schemas.xmlsoap.org/ws/2005/05/identity/claimproperties/format"] = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress");
+
+@RuleName = "Send Group Membership"
+c:[Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname", Issuer == "AD AUTHORITY"]
+=> issue(store = "Active Directory", types = ("http://schemas.xmlsoap.org/claims/Group"), query = ";memberOf;{0}", param = c.Value);
+'@</code></pre>
+  <p>3. Claim Rules 적용:</p>
+  <pre><code>Set-AdfsRelyingPartyTrust -TargetName $relyingPartyName -IssuanceTransformRules $claimRules</code></pre>
+
+  <h5>사용자 그룹 확인 (Verifying User Groups)</h5>
+  <p>1. 확인할 사용자 이름 설정:</p>
+  <pre><code>$username = "testuser"</code></pre>
+  <p>2. 사용자 계정 찾기:</p>
+  <pre><code>$searcher = [adsisearcher]"(samaccountname=$username)"
+$user = $searcher.FindOne()</code></pre>
+  <p>3. 사용자가 속한 그룹 표시:</p>
+  <pre><code>$user.Properties.memberof</code></pre>
+  <p>출력 예시:</p>
+  <pre><code>CN=Role - CXIQ Developers,OU=Role Groups,DC=dev,DC=local</code></pre>
+
+  <h4 id="adfs-cert">ADFS가 SP Signing Certificate를 신뢰하도록 구성</h4>
+  <p>1. ADFS 서버에서 SP 인증서를 TrustedPeople 저장소로 가져오기:</p>
+  <pre><code>Import-Certificate -FilePath "C:\service-provider-certificate.crt" -CertStoreLocation "Cert:\LocalMachine\TrustedPeople"</code></pre>
+  <p>2. 다음 중 하나를 선택하여 실행:</p>
+  <div class="note"><strong>Note</strong>: SP 인증서는 ADFS가 표준 신뢰 체인으로 검증할 수 없는 내부 Certificate Authority에서 발급됩니다.</div>
+  <p><strong>옵션 A</strong> - 이 Relying Party에 대한 체인 검증 전역 비활성화:</p>
+  <pre><code>Set-AdfsRelyingPartyTrust `
+    -TargetIdentifier "&lt;sp_entity_id&gt;" `
+    -SigningCertificateRevocationCheck None `
+    -EncryptionCertificateRevocationCheck None</code></pre>
+  <p><strong>옵션 B</strong> - 발급 CA 인증서를 Trusted Root Certification Authorities 저장소로 가져오기:</p>
+  <pre><code>Import-Certificate -FilePath "C:\cisco-iq-onprem-ca.cer" -CertStoreLocation "Cert:\LocalMachine\Root"</code></pre>
+  <p>3. ADFS 서비스 재시작:</p>
+  <pre><code>Restart-Service adfssrv</code></pre>
+
+  <h4 id="adfs-metadata">ADFS Metadata 내보내기 (Exporting ADFS Metadata)</h4>
+  <h5>PowerShell 사용</h5>
+  <ol>
+    <li>ADFS 서버에서 PowerShell 열기</li>
+    <li>다음 명령으로 메타데이터 파일 다운로드:</li>
+  </ol>
+  <pre><code>$metadataUrl = (Get-AdfsEndpoint | Where-Object {$_.Protocol -eq "Federation Metadata"}).FullUrl
+Invoke-WebRequest -Uri $metadataUrl.AbsoluteUri -OutFile "C:\adfs-metadata.xml"
+Write-Host "ADFS metadata exported to C:\adfs-metadata.xml" -ForegroundColor Green</code></pre>
+  <h5>웹 브라우저 사용</h5>
+  <ol>
+    <li><em>https://&lt;your-adfs-server&gt;/FederationMetadata/2007-06/FederationMetadata.xml</em>로 이동</li>
+    <li>&lt;your-adfs-server&gt;를 실제 ADFS 서버 호스트명으로 교체</li>
+    <li>프롬프트 시 메타데이터 XML 파일을 컴퓨터에 저장</li>
+  </ol>
+
+  <h4 id="adfs-idp">ADFS IDP 추가 (Adding ADFS IDP)</h4>
+  <ol>
+    <li><strong>Identity Providers</strong> 페이지에서 <strong>Add identity provider</strong> 클릭</li>
+    <li>Identity provider 이름 입력</li>
+    <li>Domain 입력 (예: company.com)</li>
+    <li>(선택 사항) 필요한 경우 <strong>Enable single logout toggle</strong> 버튼 켜기</li>
+    <li><strong>Upload IDP Metadata</strong> field에 SAML metadata 파일 드래그 앤 드롭 또는 업로드</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+  <div class="note"><strong>Note</strong>: Role Mapping 완료 전까지 상태가 "Incomplete"로 표시되는 것은 정상 동작입니다.</div>
+
+  <h4 id="adfs-role">Role Mapping 구성 (Configuring Role Mapping)</h4>
+  <p>Role Mapping 구성 전에 Active Directory에서 매핑에 사용할 그룹을 찾습니다:</p>
+  <pre><code>$searcher = New-Object DirectoryServices.DirectorySearcher
+$searcher.Filter = "(&amp;(objectClass=group)(cn=Role - CXIQ*))"
+$searcher.PropertiesToLoad.Add("distinguishedName") | Out-Null
+$searcher.PropertiesToLoad.Add("cn") | Out-Null
+$searcher.FindAll() | ForEach-Object { $_.Properties["distinguishedname"] }</code></pre>
+  <p>그룹 정보는 전체 Distinguished Name(DN) 형식으로 반환됩니다. 예:</p>
+  <pre><code>CN=Role - CXIQ Developers,OU=Groups,DC=dev,DC=example,DC=com
+CN=Role - CXIQ Viewers,OU=Groups,DC=dev,DC=example,DC=com</code></pre>
+  <div class="note"><strong>Note</strong>: 필요한 그룹이 목록에 없으면 Administrator가 Active Directory에서 그룹을 먼저 생성해야 합니다.</div>
+  <ol>
+    <li><p>추가된 IDP에서 <strong>More Options</strong> 아이콘 &gt; <strong>Map Roles</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-14.png" alt="Role Mapping"><div class="img-caption">Role Mapping</div></div>
+    </li>
+    <li>선택한 <strong>System role</strong>에 <strong>IDP role</strong> 입력:
+      <ul>
+        <li><code>general_account_administrator</code>: 전체 권한. IDP Role (파싱된 이름): CXIQ Admins</li>
+        <li><code>general_account_viewer</code>: 읽기 전용 접근. IDP Role (파싱된 이름): CXIQ Developers, CXIQ Viewers</li>
+      </ul>
+      <div class="note"><strong>Note</strong>: 전체 Domain Name이 아닌 파싱된 이름(예: CXIQ Developers) 사용</div>
+    </li>
+    <li><strong>Save</strong> 클릭 → 상태가 <strong>Success</strong>로 업데이트됨</li>
+  </ol>
+
+  <h4 id="adfs-verify">검증 및 테스트 (Verification and Testing)</h4>
+  <h5>인증 테스트</h5>
+  <ol>
+    <li>시크릿/비공개 모드 브라우저에서 <em>https://your-cisco-iq-domain.com/login</em>으로 이동</li>
+    <li><code>domain\username</code> 또는 <code>user@domain.local</code> 형식으로 Active Directory 자격 증명으로 로그인</li>
+    <li>인증 성공 후 <strong>Cisco IQ Home</strong> 페이지로 리디렉션되는지 확인</li>
+    <li>사용자 프로필에 올바른 파싱된 그룹 이름(예: CXIQ Developers)이 표시되는지 확인</li>
+  </ol>
+  <h5>로그아웃 테스트</h5>
+  <p><strong>Log out from Cisco IQ</strong> 클릭 → "Logging out, please wait…" 메시지 표시 후 <strong>Cisco IQ Login</strong> 페이지로 리디렉션. ADFS 세션도 함께 종료됩니다.</p>
+
+  <h4 id="troubleshoot-adfs">ADFS 문제 해결 (Troubleshooting ADFS Issues)</h4>
+  <p class="table-caption">ADFS 문제 해결</p>
+  <table>
+    <thead><tr><td>문제 (Issue)</td><td>증상 (Symptoms)</td><td>원인/해결 방법 (Causes / Fixes)</td></tr></thead>
+    <tbody>
+      <tr><td><strong>Groups Not Extracted</strong></td><td>로그인 후 Role 없음</td><td>• Missing claim rule: ADFS Claim Rules 구성 재실행<br>• Wrong group attribute: http://schemas.xmlsoap.org/claims/Group 이어야 함<br>• 사용자가 AD 그룹에 없음</td></tr>
+      <tr><td><strong>Decryption Failed</strong></td><td>로그에 "Failed to decrypt assertion" 표시</td><td>ADFS 인증서 구성 확인</td></tr>
+      <tr><td><strong>Login Loop</strong></td><td>인증 또는 로그인 루프</td><td>• Invalid ACS URL: <em>https://your-fqdn/saml/acs</em> 확인<br>• Cookie mismatch: 올바른 도메인의 브라우저 쿠키 확인</td></tr>
+    </tbody>
+  </table>
+  <h5>진단 명령어 (Diagnostics Commands)</h5>
+  <p>ADFS Federation Metadata 접근성 확인:</p>
+  <pre><code>curl -k https://&lt;your-adfs-domain&gt;/FederationMetadata/2007-06/FederationMetadata.xml</code></pre>
+  <p>암호화 인증서 검증:</p>
+  <pre><code>Get-AdfsRelyingPartyTrust -Name "Cisco IQ - Stage" | Select-Object EncryptionCertificate | Format-List</code></pre>
+  <p>SAML Endpoint 구성 검토:</p>
+  <pre><code>Get-AdfsRelyingPartyTrust -Name "Cisco IQ - Stage" | Select-Object SamlEndpoints</code></pre>
+
+  <!-- 4. SCP Servers -->
+  <h2 id="scp">4. SCP 서버 추가 (Adding SCP Servers)</h2>
+  <p>SCP(Secure Copy Protocol) 서버는 Cisco IQ 설치의 추가, 업그레이드 또는 수정에 필요한 업그레이드 파일을 가져오기 위한 사전 조건입니다.</p>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>SCP Server</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-15.png" alt="SCP Server Home page"><div class="img-caption">SCP Server Home page</div></div>
+    </li>
+    <li><p><strong>Configure SCP Server</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-16.png" alt="Configure SCP Server"><div class="img-caption">Configure SCP Server</div></div>
+    </li>
+    <li>IP address/hostname 입력</li>
+    <li>Port number 입력</li>
+    <li>Remote directory 입력</li>
+    <li>Username 입력</li>
+    <li>Password 입력</li>
+    <li><strong>Save</strong> 클릭 → 확인 메시지 표시</li>
+  </ol>
+  <h3>SCP 서버 편집 (Editing Existing SCP Servers)</h3>
+  <ol>
+    <li><p>SCP Server 페이지로 이동</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-17.png" alt="SCP Server"><div class="img-caption">SCP Server</div></div>
+    </li>
+    <li><p>원하는 SCP 서버의 <strong>Edit</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-18.png" alt="Editing SCP Server"><div class="img-caption">Editing SCP Server</div></div>
+    </li>
+    <li>필요한 내용 수정</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+
+  <!-- 5. System Management -->
+  <h2 id="system-mgmt">5. System Management 업데이트</h2>
+  <p>고객은 UI를 통해 최신 Cisco IQ Link 버전으로 업그레이드할 수 있습니다. Cisco IQ Data Connectors 페이지에서도 확인할 수 있습니다.</p>
+
+  <h3 id="reschedule">5.1 업데이트 일정 변경 (Rescheduling System)</h3>
+  <ol>
+    <li><p><strong>Administration</strong>에서 <strong>System Configuration</strong> &gt; <strong>System Management</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-19.png" alt="System Upgrade"><div class="img-caption">System Upgrade</div></div>
+    </li>
+    <li><p><strong>Reschedule update</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-20.png" alt="Reschedule Upgrade"><div class="img-caption">Reschedule Upgrade</div></div>
+    </li>
+    <li>즉시 업데이트 → <strong>Update Now</strong>, 다른 시간 예약 → <strong>Update Later</strong></li>
+    <li><p><strong>Save</strong> 클릭 → 확인 메시지 표시 후 System Update 홈 페이지로 이동</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-21.png" alt="Successful Upgrade"><div class="img-caption">Successful Upgrade</div></div>
+    </li>
+  </ol>
+  <h4>업그레이드 일정 편집 (Editing System Upgrade Schedules)</h4>
+  <p>시스템 업그레이드에 대한 사용자 정의 일정을 생성할 수 있습니다.</p>
+  <ol>
+    <li><p><strong>System Management</strong> 페이지의 <strong>Current System</strong> 섹션에서 <strong>Edit maintenance window</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-22.png" alt="Edit maintenance window"><div class="img-caption">Edit maintenance window</div></div>
+    </li>
+    <li><strong>Day</strong> 및 <strong>Time</strong> 드롭다운에서 옵션 선택</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+  <div class="note"><strong>Notes</strong><br>
+  • 업그레이드 일정 미구성 시: 재부팅 불필요 업그레이드는 2주, 재부팅 필요 업그레이드는 4주 유예 기간 기본 적용. 유예 기간 이후에는 수동으로 업데이트해야 합니다.<br>
+  • 업그레이드 실패 시 최대 2회 자동 재시도 수행. 세 번째 시도는 수동으로 시작해야 합니다.</div>
+
+  <h3 id="manual-upgrade">5.2 수동 시스템 업그레이드 (Manually Upgrading the System)</h3>
+  <p>Cisco IQ SaaS에서 자동 배포를 사용할 수 없거나 지연된 경우, 직접 업그레이드 번들을 다운로드하여 수동으로 업그레이드할 수 있습니다.</p>
+  <ol>
+    <li>Cisco IQ SaaS(iq.cisco.com)에 로그인</li>
+    <li><p><strong>Home</strong> &gt; <strong>System Settings</strong> &gt; <strong>Software Catalog</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-23.png" alt="Software Catalog"><div class="img-caption">Software Catalog</div></div>
+    </li>
+    <li><p><strong>Cisco IQ Link</strong> 섹션에서 <strong>Download options</strong> &gt; <strong>Upgrade packages</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-24.png" alt="Upgrade Package"><div class="img-caption">Upgrade Package</div></div>
+    </li>
+    <li>드롭다운에서 <strong>Current version</strong> 선택</li>
+    <li>드롭다운에서 <strong>Build type</strong> 선택</li>
+    <li>드롭다운에서 <strong>Target version</strong> 선택</li>
+    <li><strong>Download</strong> 클릭 → 업그레이드 번들 다운로드</li>
+    <li>Cisco IQ Link로 이동</li>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>System Management</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-25.png" alt="Configure Update"><div class="img-caption">Configure Update</div></div>
+    </li>
+    <li><p><strong>Configure update</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-26.png" alt="Local File Upload"><div class="img-caption">Local File Upload</div></div>
+    </li>
+    <li><strong>Local file upload</strong> 라디오 버튼 클릭</li>
+    <li>다운로드한 업그레이드 번들 파일 선택 또는 드래그</li>
+    <li><strong>Done</strong> 클릭 → 업데이트 성공 확인 메시지 표시</li>
+  </ol>
+
+  <!-- 6. SSL Certificates -->
+  <h2 id="ssl">6. SSL Certificates 구성</h2>
+  <p>기본 자체 서명 인증서가 Cisco IQ에 사전 설치 및 활성화되어 있지만, 사용자 정의 SSL 인증서를 업로드할 수 있습니다. 사용자 정의 SSL 인증서가 활성화되면 HTTPS 연결에 사용되며, 인증서가 비활성화되거나 삭제되면 시스템이 자동으로 기본 인증서로 복원됩니다.</p>
+  <div class="note"><strong>Note</strong>: 인증서는 최소 90일의 유효 기간이 남아 있어야 합니다. 만료까지 90일 미만이 남은 인증서는 "만료 임박"으로 간주됩니다. SSL 인증서 추가/편집/삭제 후에는 Okta IDP 또는 ADFS IDP의 Completing SLO Configuration 섹션에 따라 새 SSL을 업로드해야 합니다.</div>
+
+  <h3>6.1 사용자 정의 SSL Certificate 추가</h3>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>SSL Certificates</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-27.png" alt="Adding SSL Certificate"><div class="img-caption">Adding SSL Certificate</div></div>
+    </li>
+    <li><strong>Add Custom SSL Certificate</strong> 클릭</li>
+  </ol>
+  <div class="note"><strong>Notes</strong><br>
+  • PEM(Privacy-Enhanced Mail) 인코딩된 인증서와 키를 텍스트 문자열로 포함한 .txt 파일 업로드<br>
+  • 한 번에 하나의 .txt 파일만 업로드 가능<br>
+  • 파일에는 인증서와 개인 키가 모두 포함되어야 함</div>
+  <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-28.png" alt="Upload SSL Certificates"><div class="img-caption">Upload SSL Certificates</div></div>
+  <ol start="3">
+    <li><strong>SSL Certificate</strong> 필드에 사용자 정의 SSL 인증서 드래그 앤 드롭 또는 업로드</li>
+    <li><p><strong>Enable custom SSL certificate</strong> 토글 버튼 켜기</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-29.png" alt="Enable Certificate"><div class="img-caption">Enable Certificate</div></div>
+      <div class="note"><strong>Note</strong>: 즉시 활성화하지 않고 인증서만 업로드하려면 토글을 OFF로 유지하세요.</div>
+    </li>
+    <li><strong>Enable certificate</strong> 클릭</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+  <p>사용자 정의 SSL 인증서가 활성화됩니다. 기본 시스템 인증서는 자동으로 비활성화됩니다.</p>
+
+  <h3>6.2 사용자 정의 SSL Certificate 편집</h3>
+  <ol>
+    <li><p>원하는 SSL 인증서로 이동</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-30.png" alt="Edit SSL Certificate"><div class="img-caption">Edit SSL Certificate</div></div>
+    </li>
+    <li><strong>More Options</strong> 아이콘 &gt; <strong>Edit</strong> 선택</li>
+    <li>인증서 정보 편집</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+
+  <h3>6.3 사용자 정의 SSL Certificate 삭제</h3>
+  <div class="warning"><strong>Warning</strong>: 사용자 정의 SSL 인증서를 삭제하면 되돌릴 수 없습니다. 삭제 후 언제든지 새 사용자 정의 인증서를 업로드할 수 있습니다.</div>
+  <ol>
+    <li><p>삭제할 SSL 인증서로 이동</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-31.png" alt="Delete SSL Certificate"><div class="img-caption">Delete SSL Certificate</div></div>
+    </li>
+    <li><strong>More Options</strong> 아이콘 &gt; <strong>Delete</strong> 선택</li>
+    <li><strong>Delete Certificate</strong> 클릭 → 사용자 정의 인증서 삭제, 기본 인증서 자동 재활성화</li>
+  </ol>
+
+  <!-- 7. Syslog -->
+  <h2 id="syslog">7. Syslog 서버 구성 (Syslog Server Configuration)</h2>
+  <p>Administrator 역할의 사용자는 시스템 로그를 내보내기 위해 외부 Syslog 서버를 구성할 수 있습니다. 최대 2개의 Syslog 서버를 구성할 수 있습니다.</p>
+  <div class="note"><strong>Note</strong>: Syslog 서버는 FQDN이 아닌 IP 주소로 지정해야 합니다.</div>
+
+  <h3>7.1 Syslog 서버 추가</h3>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>Syslog Server</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-32.png" alt="Add Syslog Server"><div class="img-caption">Add Syslog Server</div></div>
+    </li>
+    <li><p><strong>Add syslog server</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-33.png" alt="Create Syslog Server"><div class="img-caption">Create Syslog Server</div></div>
+    </li>
+    <li>IP address/hostname 입력</li>
+    <li>Port 번호 입력</li>
+    <li>Protocol 드롭다운에서 프로토콜 선택 (예: UDP 또는 TCP)</li>
+    <li><strong>Enable syslog server</strong> 토글 버튼 켜기</li>
+    <li><strong>Save</strong> 클릭 → 확인 메시지 표시</li>
+  </ol>
+
+  <h3>7.2 Syslog 서버 편집</h3>
+  <ol>
+    <li>원하는 Syslog 서버로 이동</li>
+    <li><p><strong>More Options</strong> 아이콘 &gt; <strong>Edit</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-34.png" alt="Edit Syslog Server"><div class="img-caption">Edit Syslog Server</div></div>
+    </li>
+    <li>내용 편집 또는 <strong>Enable syslog server</strong> 토글 끄기</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+
+  <h3>7.3 Syslog 서버 삭제</h3>
+  <ol>
+    <li>원하는 Syslog 서버로 이동</li>
+    <li><p><strong>More Options</strong> 아이콘 &gt; <strong>Delete</strong> 선택 → 확인 메시지 표시</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-35.png" alt="Confirmation"><div class="img-caption">삭제 확인</div></div>
+    </li>
+    <li><strong>Delete syslog server</strong> 클릭</li>
+  </ol>
+
+  <!-- 8. Activity & Logs -->
+  <h2 id="activity">8. Activity &amp; Logs (활동 및 로그)</h2>
+  <p>Activity &amp; Logs는 Cisco IQ에서 사용자 활동 및 변경 사항에 대한 상세 기록을 제공하여 Administrator가 사용자 활동을 추적하고 투명성을 유지할 수 있도록 합니다.</p>
+  <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-36.png" alt="Activity and Logs"><div class="img-caption">Activity and Logs</div></div>
+  <p>활동 및 로그를 보려면 <strong>System Settings</strong> 메뉴에서 <strong>Activity &amp; Logs</strong> 선택합니다.</p>
+  <p>Activity and Logs 주요 기능:</p>
+  <ul>
+    <li>필터, 페이지네이션, 검색 기능 지원</li>
+    <li>게이트웨이 레벨의 모든 API 작업 기록</li>
+  </ul>
+  <p>사용 가능한 필터 옵션:</p>
+  <ul>
+    <li><strong>Date</strong>: 특정 시간 범위로 로그 필터링</li>
+    <li><strong>Log Level</strong>: 심각도별 필터링 (예: error, warning, info)</li>
+    <li><strong>Activity Type</strong>: 시스템 활동 유형별 필터링</li>
+    <li><strong>Error Code</strong>: 특정 오류 코드의 로그 필터링</li>
+  </ul>
+
+  <!-- 9. IQ Connectivity -->
+  <h2 id="iq-connectivity">9. IQ Connectivity</h2>
+  <p>장치 연결 설정 및 구성 정보를 보고 관리하는 방법:</p>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>IQ Connectivity</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-37.png" alt="IQ Connectivity"><div class="img-caption">IQ Connectivity</div></div>
+    </li>
+    <li><p><strong>Connectivity settings</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-38.png" alt="Connectivity Settings"><div class="img-caption">Connectivity Settings</div></div>
+    </li>
+    <li>필요에 따라 세부 정보 업데이트</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+
+  <!-- 10. Connection Management -->
+  <h2 id="connection-mgmt">10. Connection Management (데이터 수집)</h2>
+  <p>Cisco IQ Link는 네트워크 데이터 수집을 위한 온프레미스 배포 솔루션으로, 인프라에 대한 깊은 가시성을 제공합니다. Catalyst Center와 Direct Connection을 통해 데이터를 수집합니다.</p>
+  <p>데이터 수집 구성 요약:</p>
+  <ul>
+    <li><strong>Credential Sets 생성</strong>: 네트워크 장치와 통신하기 위한 인증 프로토콜(예: SNMP v1/v2c/v3) 설정. 보안 구역 또는 위치별로 자격 증명을 중앙화하면 한 곳에서 비밀번호를 업데이트할 때 연결된 모든 장치에 자동으로 적용됩니다.</li>
+    <li><strong>Inventory에 Credential 매핑</strong>: Credential Sets를 Inventory Assets에 매핑하여 인증 프로세스를 자동화합니다. 특정 IP 범위를 정의된 Credential Sets에 연결하는 규칙을 생성하면 시스템이 데이터 수집 중 올바른 인증을 자동으로 적용합니다.</li>
+  </ul>
+  <div class="note"><strong>Note</strong>: 장치 검색에는 SNMPv2c/SNMPv3 및 SSH가 필요하며, Catalyst Center 구성 전에 HTTP/HTTPS 자격 증명을 먼저 입력해야 합니다.</div>
+
+  <h3 id="credentials">10.1 Credentials 추가 (Adding Credentials)</h3>
+  <ol>
+    <li><strong>System Settings</strong>에서 <strong>Connection Management</strong> 선택</li>
+    <li><p><strong>Credentials</strong> 탭 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-39.png" alt="Credentials Tab"><div class="img-caption">Credentials Tab</div></div>
+    </li>
+    <li><p><strong>Add credentials</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-40.png" alt="Add Credentials"><div class="img-caption">Add Credentials</div></div>
+    </li>
+    <li>Name 입력</li>
+    <li>해당하는 프로토콜 체크박스 선택</li>
+    <li><p><strong>Next</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-41.png" alt="Add Credentials Details"><div class="img-caption">Add Credentials Details</div></div>
+      <div class="note"><strong>Note</strong>: 위 이미지는 모든 프로토콜이 선택된 경우의 화면. 실제 화면은 선택한 프로토콜만 표시됩니다.</div>
+    </li>
+    <li>선택한 각 프로토콜의 로그인 정보 입력</li>
+    <li><p><strong>Next</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-42.png" alt="Specify IP Addresses"><div class="img-caption">Specify IP Addresses</div></div>
+    </li>
+    <li><strong>Included IPs</strong> 입력</li>
+  </ol>
+  <div class="note"><strong>Note</strong>: 이 필드는 자격 증명을 사용하여 연결을 설정할 수 있는 IP 주소 또는 IP 범위를 정의합니다. IP와 IP 마스크(와일드카드 표기법)를 혼합하여 사용할 수 있습니다.</div>
+  <ol start="10">
+    <li><p><strong>Save</strong> 클릭 → 확인 메시지 표시 후 Credentials 탭으로 이동</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-43.png" alt="Credentials Added"><div class="img-caption">Credentials Added</div></div>
+    </li>
+  </ol>
+  <p><strong>Edit</strong> 아이콘으로 편집, <strong>Delete</strong> 아이콘으로 삭제할 수 있습니다.</p>
+
+  <h4>Credential 선택 및 매칭 로직 (Credential Selection and Matching Logic)</h4>
+  <p>텔레메트리 엔진은 검색 및 수집 시 우선순위 기반 매칭 로직을 사용하여 적용할 자격 증명을 결정합니다.</p>
+  <ul>
+    <li><strong>우선순위</strong>: Exact IP match (최높 우선순위) &gt; Trailing Wildcard Match (별표가 적을수록 더 구체적)</li>
+    <li><strong>와일드카드 형식</strong>: 와일드카드(*)는 IP 주소의 마지막 자리에서부터만 지원
+      <ul>
+        <li>지원: <code>1.2.3.*</code> / <code>1.2.*.*</code> / <code>1.*.*.*</code> / <code>*.*.*.*</code></li>
+        <li>미지원: 앞쪽 와일드카드, 옥텟 사이 와일드카드, 대시 등</li>
+      </ul>
+    </li>
+  </ul>
+  <p class="table-caption">Credential Selection 예시</p>
+  <table>
+    <thead><tr><td>Device IP</td><td>Available Credential Sets</td><td>Selected Credential Set</td></tr></thead>
+    <tbody>
+      <tr><td>10.10.1.5</td><td>10.10.1.5, 10.10.1.*, 10.10.*.*</td><td>10.10.1.5 (Exact Match)</td></tr>
+      <tr><td>10.10.2.15</td><td>10.10.2.*, 10.10.*.*</td><td>10.10.2.* (더 구체적)</td></tr>
+      <tr><td>10.10.5.50</td><td>10.10.*.*, *.*.*.*</td><td>10.10.*.* (더 구체적)</td></tr>
+    </tbody>
+  </table>
+
+  <h3 id="catalyst">10.2 Catalyst Center를 통한 데이터 수집</h3>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>Connection Management</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-44.png" alt="Connection Management"><div class="img-caption">Connection Management</div></div>
+    </li>
+    <li><p><strong>Catalyst Center</strong> 옵션 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-45.png" alt="Add Catalyst Center"><div class="img-caption">Add Catalyst Center</div></div>
+    </li>
+    <li>IP Address 또는 FQDN 입력</li>
+    <li>드롭다운에서 구성된 HTTP/HTTPS 자격 증명 선택</li>
+    <li><p><strong>Submit</strong> 클릭 → 확인 메시지 표시 (최대 75분 소요)</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-46.png" alt="Catalyst Center Added Successfully"><div class="img-caption">Catalyst Center Added Successfully</div></div>
+    </li>
+    <li>수집 일정 설정 (아래 Scheduling 섹션 참조)</li>
+  </ol>
+  <div class="note"><strong>Note</strong>: Cisco IQ Link는 자동 스케줄링이 사전 구성되어 있습니다. 조직의 요구사항 및 유지 관리 창에 맞게 일정을 편집하는 것을 강력히 권장합니다.</div>
+
+  <h3 id="direct">10.3 Direct Connection</h3>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>Connection Management</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-47.png" alt="Connection Management"><div class="img-caption">Connection Management</div></div>
+    </li>
+    <li><p><strong>Direct Connection</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-48.png" alt="Upload File"><div class="img-caption">Direct Connection 옵션</div></div>
+    </li>
+    <li><p>원하는 방법을 선택하여 장치 추가:</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-49.png" alt="Upload a File"><div class="img-caption">Upload a File</div></div>
+      <ul>
+        <li><strong>Upload a file</strong>: 파일을 클릭하거나 드래그 앤 드롭한 후 <strong>Submit</strong> 클릭</li>
+      </ul>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-50.png" alt="Specify individual devices"><div class="img-caption">Specify individual devices</div></div>
+      <ul>
+        <li><strong>Specify individual devices</strong>: 단일 호스트명, IP 주소, 또는 쉼표로 구분된 호스트명/IP 주소 목록 입력 후 <strong>Submit</strong> 클릭</li>
+      </ul>
+    </li>
+    <li>수집 일정 설정 (아래 Scheduling 섹션 참조)</li>
+  </ol>
+  <div class="note"><strong>Note</strong>: Cisco IQ Link는 자동 스케줄링이 사전 구성되어 있습니다. 조직의 요구사항 및 유지 관리 창에 맞게 일정을 편집하는 것을 강력히 권장합니다.</div>
+
+  <h3 id="scheduling">10.4 Scheduling (수집 일정 설정)</h3>
+  <p>Scheduling은 Cisco IQ Link가 자동 데이터 수집을 수행할 시간을 정의합니다.</p>
+  <ol>
+    <li><p><strong>Connection Management</strong> 페이지 of <strong>Scheduling</strong> 섹션에서 수정할 일정의 <strong>Edit</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-51.png" alt="Edit Schedule"><div class="img-caption">Edit Schedule</div></div>
+    </li>
+    <li><strong>Schedule Discovery</strong> 섹션에서 <strong>Frequency</strong>와 <strong>Day</strong> 선택, 시작 <strong>Time</strong> 입력</li>
+    <li><strong>Schedule Inventory Collection</strong> 섹션에서 <strong>Frequency</strong> 선택, 시작 <strong>Time</strong> 입력</li>
+    <li><strong>Submit</strong> 클릭</li>
+  </ol>
+  <div class="note"><strong>Note</strong>: 검색 또는 수집 일정 변경 사항이 Cisco IQ Link 내에서 동기화되어 반영되기까지 5~10분이 소요될 수 있습니다.</div>
+
+  <!-- 11. Banners -->
+  <h2 id="banners">11. Banners (배너)</h2>
+  <p>Administrator는 애플리케이션 전체에 표시되는 사용자 정의 배너를 구성할 수 있습니다.</p>
+
+  <h3>11.1 Banner 구성 (Configuring Banners)</h3>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>Banners</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-52.png" alt="Configure Banner"><div class="img-caption">Configure Banner</div></div>
+    </li>
+    <li><p><strong>Configure</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-53.png" alt="Edit Application Banner"><div class="img-caption">Edit Application Banner</div></div>
+    </li>
+    <li>토글을 클릭하여 배너 활성화 또는 비활성화</li>
+    <li>Banner color 선택</li>
+    <li>Banner title 입력</li>
+    <li>Banner content 입력</li>
+    <li>Banner location 선택</li>
+    <li><strong>Save</strong> 클릭 → 배너가 애플리케이션 전체에 표시됩니다.</li>
+  </ol>
+
+  <h3>11.2 Banner 편집 (Editing Banners)</h3>
+  <ol>
+    <li><p><strong>System Settings</strong>에서 <strong>System Configuration</strong> &gt; <strong>Banners</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-54.png" alt="Edit Banners"><div class="img-caption">Edit Banners</div></div>
+    </li>
+    <li><p><strong>Edit</strong> 클릭</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-55.png" alt="Edit Application Banner"><div class="img-caption">Edit Application Banner</div></div>
+    </li>
+    <li>원하는 내용 편집</li>
+    <li>토글을 클릭하여 배너 활성화 또는 비활성화</li>
+    <li><strong>Save</strong> 클릭</li>
+  </ol>
+
+  <!-- 12. Troubleshooting -->
+  <h2 id="troubleshooting">12. Troubleshooting (문제 해결)</h2>
+  <p>고객은 Cisco IQ 시스템에서 진단 및 로그 파일을 수집하여 SCP 서버로 안전하게 전송할 수 있습니다. 이 파일들은 문제를 보고할 때 지원팀과 공유하여 문제 해결에 도움을 줄 수 있습니다.</p>
+  <ol>
+    <li><p>Cisco IQ에 로그인</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-56.png" alt="Main Menu"><div class="img-caption">Main Menu</div></div>
+    </li>
+    <li><p>Cisco IQ <strong>Main Menu</strong>에서 "3"을 입력하고 <strong>Enter</strong>를 눌러 <strong>System Diagnostics</strong> 선택</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-57.png" alt="System Diagnostics"><div class="img-caption">System Diagnostics</div></div>
+    </li>
+    <li>SCP/SFTP Server Address 입력</li>
+    <li>SCP/SFTP Server Port 입력</li>
+    <li>SCP/SFTP Server Path 입력</li>
+    <li>프로토콜 선택</li>
+    <li>Username 입력</li>
+    <li>Password 입력</li>
+    <li><p>"C"를 입력하고 <strong>Enter</strong>를 눌러 시스템 진단 계속</p>
+      <div class="img-wrap"><img src="https://www.cisco.com/c/dam/en/us/support/docs/cx/cisco-iq-link/cx226068-cisco-iq-link-operations-guide-v1-1-1-58.png" alt="System Diagnostic Operation Complete"><div class="img-caption">System Diagnostic Operation Complete</div></div>
+    </li>
+  </ol>
+  <p>시스템이 진단 프로세스를 시작하고 다음 작업을 수행합니다:</p>
+  <ul>
+    <li>Reachability 확인</li>
+    <li>시스템 정보 수집</li>
+    <li>Kubernetes 정보 수집</li>
+    <li>로그 수집</li>
+    <li>System Diagnostics 번들 준비</li>
+    <li>System Diagnostics 번들 업로드</li>
+  </ul>
+  <p>완료 후 생성된 번들 이름이 포함된 확인 메시지가 표시됩니다.</p>
+
+  <!-- Revision History -->
+  <h2>개정 이력 (Revision History)</h2>
+  <table class="revision-table">
+    <thead><tr><td>Revision</td><td>Publish Date</td><td>Comments</td></tr></thead>
+    <tbody>
+      <tr><td>1.0</td><td>June 20, 2026</td><td>Initial Release</td></tr>
+    </tbody>
+  </table>
+
+</div><!-- /main -->
+</body>
+</html>
