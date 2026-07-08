@@ -31,6 +31,68 @@ details{margin:16px 0;border:1px solid var(--line);border-radius:12px;overflow:h
   <h2 style="border-left-color:var(--primary);">Cisco IQ</h2>
   <a class="guide-card" href="https://www.cisco.com/c/en/us/support/cx/cisco-iq.html" target="_blank" rel="noopener noreferrer"><div class="guide-ico">📚</div><div class="guide-tx"><div class="t">Cisco IQ 공식 문서</div><div class="h">www.cisco.com — 제품 개요, FAQ, 지원 문서</div></div></a>
   <a class="guide-card" href="https://www.cisco.com/c/en/us/support/docs/cx/cisco-iq/getting-started-guide/cx225778-cisco-iq-getting-started-guide.html" target="_blank" rel="noopener noreferrer"><div class="guide-ico">🚀</div><div class="guide-tx"><div class="t">Cisco IQ 시작 가이드</div><div class="h">www.cisco.com — 계정 생성, 계약 연결, 온보딩 절차</div></div></a>
+  <details style="margin:12px 0;border:1px solid #dee2e6;border-radius:12px;overflow:hidden;box-shadow:0 .125rem .25rem rgba(0,0,0,.075);">
+    <summary style="padding:14px 18px;cursor:pointer;background:#f5f6f8;font-weight:600;font-size:.95rem;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:1.3rem;">📝</span> Cisco IQ 계정 생성하는 방법 (펼치기)
+    </summary>
+    <div style="padding:20px 22px;font-size:.9rem;line-height:1.8;background:#fff;">
+
+<h4 style="color:#0d6efd;margin:0 0 12px;">사전 요구사항</h4>
+<p>• <strong>지원 브라우저</strong>: Google Chrome, Microsoft Edge, Apple Safari, Mozilla Firefox (최신 버전)<br>
+• <strong>Cisco.com 계정</strong> (CCO ID) 필요 — 없으면 <a href="https://www.cisco.com/c/en/us/about/help/login-account-help.html" target="_blank">여기</a>에서 생성</p>
+
+<h4 style="color:#0d6efd;margin:18px 0 12px;">새 Cisco IQ 계정 생성</h4>
+<ol style="margin-left:20px;">
+  <li><a href="https://iq.cisco.com/login/" target="_blank">https://iq.cisco.com</a> 접속</li>
+  <li><strong>Create an account</strong> 클릭</li>
+  <li>CCO ID (이메일) 입력 → <strong>Next</strong></li>
+  <li>비밀번호 입력 → <strong>Verify</strong></li>
+  <li>"Create a Cisco IQ Account" 페이지에서:
+    <ul>
+      <li>회사 계정 이름 입력 (조직에서 사용할 고유한 이름)</li>
+      <li>데이터 저장 영역 선택 (US / EMEA / APJC)</li>
+    </ul>
+  </li>
+  <li><strong>Create account</strong> 클릭 → Cisco IQ 런치패드로 이동</li>
+</ol>
+
+<h4 style="color:#0d6efd;margin:18px 0 12px;">기존 CX Cloud 계정을 Cisco IQ로 마이그레이션</h4>
+<p style="background:#fffbea;border-left:3px solid #f59e0b;padding:8px 12px;border-radius:4px;font-size:.85rem;">
+⚠️ <strong>주의</strong>: 마이그레이션 없이 새 계정을 생성하면 나중에 CX Cloud 데이터를 마이그레이션할 수 없습니다. 계정 관리자(Super User Admin)만 마이그레이션 가능합니다.
+</p>
+<ol style="margin-left:20px;">
+  <li><a href="https://iq.cisco.com" target="_blank">https://iq.cisco.com</a> 접속 → <strong>Create an account</strong></li>
+  <li>CCO ID로 로그인</li>
+  <li>"Create a Cisco IQ Account" 페이지에서 마이그레이션할 CX Cloud 계정 선택</li>
+  <li>Cisco IQ 계정 이름 입력 (데이터 저장 영역은 기존 계정에서 자동 설정)</li>
+  <li><strong>Create account and migrate data</strong> 클릭</li>
+  <li>Migration Status 페이지에서 완료 확인 → <strong>Continue</strong></li>
+</ol>
+<p>마이그레이션되는 항목: 사용자/그룹, 서비스 계약, 클라우드 데이터 소스 (Intersight, Webex, SD-WAN, Meraki)</p>
+
+<h4 style="color:#0d6efd;margin:18px 0 12px;">기존 계정에 로그인</h4>
+<ol style="margin-left:20px;">
+  <li><a href="https://iq.cisco.com" target="_blank">https://iq.cisco.com</a> 접속</li>
+  <li><strong>Log in with SSO</strong> 클릭</li>
+  <li>CCO ID (이메일) + 비밀번호 입력 → <strong>Verify</strong></li>
+  <li>계정이 여러 개인 경우 목록에서 선택</li>
+</ol>
+<p style="font-size:.82rem;color:#6c757d;margin-top:12px;">참고: 계정에 추가되지 않은 사용자는 계정 관리자에게 액세스 요청이 필요합니다.</p>
+
+<h4 style="color:#0d6efd;margin:18px 0 12px;">계정 생성 후 초기 설정 (관리자)</h4>
+<ol style="margin-left:20px;">
+  <li><strong>클라우드 제품 연결</strong>: System Settings → Data Connectors에서 Intersight, Meraki, SD-WAN 등 연결</li>
+  <li><strong>서비스 계약 추가</strong>: System Settings → Service Contracts에서 계약 번호 입력</li>
+  <li><strong>Cisco IQ Link 연결</strong>: 온프레미스 장비 연동을 위해 IQ Link VM 배포 및 등록</li>
+  <li><strong>사용자 관리</strong>: System Settings → Users에서 팀원 추가 및 역할 할당 (Admin / Viewer)</li>
+</ol>
+
+<p style="margin-top:14px;font-size:.82rem;color:#6c757d;">
+출처: <a href="https://www.cisco.com/c/ko_kr/support/docs/cx/cisco-iq/getting-started-guide/cx225778-cisco-iq-getting-started-guide.html" target="_blank">Cisco IQ 시작하기 가이드 (한국어)</a>
+</p>
+
+    </div>
+  </details>
   <h2 style="border-left-color:var(--honey);">Cisco IQ Link</h2>
   <a class="guide-card" href="https://www.cisco.com/c/en/us/support/docs/cx/iq-link/cx225764-cisco-iq-link-getting-started-guide.html" target="_blank" rel="noopener noreferrer"><div class="guide-ico">⚡</div><div class="guide-tx"><div class="t">Cisco IQ Link 시작 가이드</div><div class="h">www.cisco.com — VM 설치, 초기 구성, 시스템 요구사항</div></div></a>
   <a class="guide-card" href="cisco-iq-link-operations-guide-ko.html" target="_blank" rel="noopener noreferrer"><div class="guide-ico">🔧</div><div class="guide-tx"><div class="t">Cisco IQ Link 운영 가이드</div><div class="h">한국어 운영 가이드 — 인증, IDP/SSO, 데이터 수집, SSL, 업그레이드, 트러블슈팅</div></div></a>
