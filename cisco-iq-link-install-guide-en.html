@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<!-- Cisco IQ Link Installation Guide (English) -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cisco IQ Link Installation Guide (English)</title>
+  <style>
+    :root {
+      --cisco-blue: #049fd9;
+      --cisco-dark: #1b2a32;
+      --cisco-mid: #2e4251;
+      --accent: #00bceb;
+      --warn: #f7941d;
+      --danger: #e2231a;
+      --success: #6abf69;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #5a6a72;
+      --border: #d0dde5;
+      --code-bg: #eef2f5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    header {
+      background: var(--cisco-dark);
+      color: #fff;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    header .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--cisco-blue);
+      letter-spacing: 1px;
+    }
+    header .title {
+      font-size: 1rem;
+      color: #c5d3da;
+      border-left: 1px solid #3a5060;
+      padding-left: 20px;
+    }
+    header .version {
+      margin-left: auto;
+      font-size: 0.78rem;
+      background: var(--cisco-mid);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* ── Layout ──────────────────────────────── */
+    .wrapper {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ── Sidebar ─────────────────────────────── */
+    nav {
+      background: var(--cisco-mid);
+      color: #c5d3da;
+      padding: 28px 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+    nav .nav-section {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--cisco-blue);
+      padding: 16px 22px 6px;
+      font-weight: 700;
+    }
+    nav a {
+      display: block;
+      color: #c5d3da;
+      text-decoration: none;
+      padding: 7px 22px;
+      font-size: 0.85rem;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    nav a:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-left-color: var(--cisco-blue);
+    }
+
+    /* ── Main ────────────────────────────────── */
+    main {
+      padding: 40px 48px;
+      max-width: 960px;
+    }
+
+    /* ── Section headings ───────────────────── */
+    h1 { font-size: 1.9rem; color: var(--cisco-dark); margin-bottom: 8px; }
+    h2 {
+      font-size: 1.35rem;
+      color: var(--cisco-dark);
+      margin: 44px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--cisco-blue);
+    }
+    h3 {
+      font-size: 1.05rem;
+      color: var(--cisco-mid);
+      margin: 26px 0 10px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* ── Cards ───────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .card-grid .card {
+      margin: 0;
+    }
+    .card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+    .card h4 {
+      font-size: 0.95rem;
+      color: var(--cisco-dark);
+      margin-bottom: 6px;
+    }
+    .card p, .card li {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* ── Callout boxes ───────────────────────── */
+    .callout {
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin: 14px 0;
+      font-size: 0.88rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .callout .icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .callout.note  { background: #e8f5fb; border-left: 4px solid var(--cisco-blue); }
+    .callout.warn  { background: #fff4e5; border-left: 4px solid var(--warn); }
+    .callout.danger{ background: #fdecea; border-left: 4px solid var(--danger); }
+    .callout.tip   { background: #e9f7ea; border-left: 4px solid var(--success); }
+
+    /* ── Tables ──────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.87rem;
+    }
+    th {
+      background: var(--cisco-dark);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #f7fafc; }
+    td code, th code {
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.84rem;
+    }
+
+    /* ── Ordered step list ───────────────────── */
+    ol.steps {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+    }
+    ol.steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin: 12px 0;
+    }
+    ol.steps li::before {
+      content: counter(step);
+      background: var(--cisco-blue);
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    ol.steps li .step-content { flex: 1; }
+
+    ul.check { list-style: none; padding: 0; }
+    ul.check li::before { content: "✓ "; color: var(--success); font-weight: 700; }
+    ul.check li { margin: 5px 0; font-size: 0.9rem; }
+
+    /* ── Tabs ────────────────────────────────── */
+    .tab-wrapper { margin: 20px 0; }
+    .tab-buttons {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 0;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 9px 18px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--muted);
+      border-radius: 6px 6px 0 0;
+      font-weight: 500;
+    }
+    .tab-btn.active {
+      background: var(--cisco-blue);
+      color: #fff;
+    }
+    .tab-content { display: none; }
+    .tab-content.active {
+      display: block;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      padding: 20px 24px;
+    }
+
+    /* ── Flow diagram ────────────────────────── */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 20px 0;
+    }
+    .flow-step {
+      background: var(--cisco-blue);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    .flow-arrow { color: var(--muted); font-size: 1.1rem; }
+
+    /* ── FQDN badge ──────────────────────────── */
+    .badge {
+      display: inline-block;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      color: var(--cisco-dark);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.83rem;
+    }
+
+    /* ── Footer ──────────────────────────────── */
+    footer {
+      background: var(--cisco-dark);
+      color: #8a9faa;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.8rem;
+    }
+    footer a { color: var(--cisco-blue); text-decoration: none; }
+
+    /* ── Responsive ──────────────────────────── */
+    @media (max-width: 820px) {
+      .wrapper { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; }
+      main { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header>
+  <div class="logo">CISCO</div>
+  <div class="title">IQ Link Installation Guide</div>
+  <div class="version">v1.1.0 &nbsp;|&nbsp; 2026.04</div>
+</header>
+
+<div class="wrapper">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <nav>
+    <div class="nav-section">Overview</div>
+    <a href="#overview">Cisco IQ Overview</a>
+    <a href="#architecture">Architecture</a>
+
+    <div class="nav-section">Prerequisites</div>
+    <a href="#prereq-hw">Hardware Requirements</a>
+    <a href="#prereq-net">Network Requirements</a>
+    <a href="#prereq-browser">Supported Browsers</a>
+
+    <div class="nav-section">VM Installation</div>
+    <a href="#install-vmware">VMware ESXi</a>
+    <a href="#install-hyperv">Hyper-V</a>
+    <a href="#install-kvm">KVM</a>
+    <a href="#network-config">Network Configuration</a>
+
+    <div class="nav-section">IQ Link Installation</div>
+    <a href="#iqlink-install">Installation Procedure</a>
+
+    <div class="nav-section">Reference</div>
+    <a href="#checklist">Installation Checklist</a>
+    <a href="#troubleshoot">Troubleshooting</a>
+    <a href="#references">Reference Documents</a>
+  </nav>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <main>
+
+    <!-- ─── 1. Overview ──────────────────────── -->
+    <section id="overview">
+      <h1>Cisco IQ Link Installation Guide</h1>
+      <p class="subtitle">Official installation guide for customer operations teams (English Edition) &nbsp;|&nbsp; Last updated: April 2026</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h4>What is Cisco IQ?</h4>
+          <p>An AI-powered unified network management platform that provides asset visibility, vulnerability detection, and Support integration through a single interface.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <h4>What is Cisco IQ Link?</h4>
+          <p>An On-Premises Connector deployed in the customer's Data Center. It securely collects Telemetry data from network devices and sends it to Cisco IQ SaaS.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🤖</div>
+          <h4>AI Assistant</h4>
+          <p>Provides predictive insights based on operational data to help detect issues proactively and improve operational efficiency.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Architecture ─────────────────────── -->
+    <section id="architecture">
+      <h2>Architecture Overview</h2>
+      <p>Cisco IQ Link resides within the customer's internal network, collects data from network devices, and securely transmits it to the Cisco IQ Cloud over HTTPS (443).</p>
+
+      <div class="flow">
+        <div class="flow-step">Customer Network<br>Devices (NW Devices)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Cisco IQ Link<br>(On-Premises VM)</div>
+        <div class="flow-arrow">→ HTTPS 443 →</div>
+        <div class="flow-step">Cisco IQ<br>SaaS Cloud</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Operations Team<br>(Web Browser)</div>
+      </div>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <span>IQ Link uses one-way (outbound-only) communication. There is no inbound access from outside into the customer's internal network.</span>
+      </div>
+    </section>
+
+    <!-- ─── 2. HW Requirements ───────────────── -->
+    <section id="prereq-hw">
+      <h2>Prerequisites — Hardware / VM Resources</h2>
+      <p>Determine the VM specifications based on the number of managed devices, using the table below.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Resource</th>
+            <th>10K Devices</th>
+            <th>20K Devices</th>
+            <th>50K Devices</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>vCPU</td><td>16</td><td>16</td><td>32</td></tr>
+          <tr><td>RAM</td><td>28 GB</td><td>28 GB</td><td>48 GB</td></tr>
+          <tr><td>Storage (SSD recommended)</td><td>600 GB</td><td>600 GB</td><td>600 GB</td></tr>
+          <tr><td>Collection Interval</td><td>24 hours or more</td><td>24 hours or more</td><td>7 days or more</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Supported Hypervisors</h3>
+      <ul class="check">
+        <li>VMware ESXi v8.0 or later + VMware vSphere Web Client v8.0 or later</li>
+        <li>Hyper-V on Microsoft Server 2022 / 2025</li>
+        <li>KVM (based on RHEL v9.7)</li>
+      </ul>
+
+      <div class="callout warn">
+        <span class="icon">⚠️</span>
+        <div>
+          <strong>Thick Provisioning recommended:</strong> Using Thin Provisioning can cause service disruption due to storage overcommitment.
+          Disk write speed must be at least <strong>70 MB/s</strong>.
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 3. Network Requirements ─────────── -->
+    <section id="prereq-net">
+      <h2>Prerequisites — Network Requirements</h2>
+
+      <h3>IP / DNS Settings</h3>
+      <ul class="check">
+        <li>A fixed IPv4 address is required (DHCP is not supported)</li>
+        <li>DNS A record: hostname → IPv4 address mapping required (example: <code>ciscoiqlink.mydomain.com</code>)</li>
+        <li>DNS PTR record: reverse lookup support required</li>
+      </ul>
+
+      <h3>Cisco IQ SaaS Connectivity FQDNs</h3>
+      <p>Outbound connectivity must be allowed to the FQDNs that match the region where IQ Link is installed.</p>
+
+      <table>
+        <thead>
+          <tr><th>Region</th><th>FQDN (must be allowed)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AMER (Americas)</td>
+            <td>
+              <span class="badge">us-west-2.iq.cisco.com</span><br>
+              <span class="badge">ng.acs.agent.us.csco.cloud</span>
+            </td>
+          </tr>
+          <tr>
+            <td>EMEA (Europe/Middle East/Africa)</td>
+            <td>
+              <span class="badge">eu-central-1.iq.cisco.com</span><br>
+              <span class="badge">ng.acs.agent.emea.csco.cloud</span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>APJC (Asia/Korea)</strong></td>
+            <td>
+              <span class="badge">ap-southeast-2.iq.cisco.com</span><br>
+              <span class="badge">ng.acs.agent.apjc.csco.cloud</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <span>Customers in Korea should select the <strong>APJC</strong> region.</span>
+      </div>
+
+      <h3>Port Requirements</h3>
+      <table>
+        <thead>
+          <tr><th>Port</th><th>Protocol</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>22</td><td>TCP</td><td>Administrator CLI access and Cisco Support debugging sessions</td></tr>
+          <tr><td>443</td><td>TCP</td><td>IQ Link UI/API communication and Cisco IQ Cloud connectivity</td></tr>
+          <tr><td>53</td><td>UDP</td><td>DNS queries</td></tr>
+          <tr><td>123</td><td>UDP</td><td>NTP (time synchronization)</td></tr>
+          <tr><td>161</td><td>UDP</td><td>SNMP (device data collection)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <span class="icon">⚠️</span>
+        <span>If your environment uses a Proxy, you must separately enter the Proxy IP/Port/authentication information during installation. Confirm this with your network team in advance.</span>
+      </div>
+    </section>
+
+    <!-- ─── 4. Supported Browsers ────────────── -->
+    <section id="prereq-browser">
+      <h2>Prerequisites — Supported Browsers</h2>
+      <p>Use the latest stable release whenever possible. Older versions may not support some features.</p>
+      <ul class="check">
+        <li>Google Chrome</li>
+        <li>Microsoft Edge</li>
+        <li>Apple Safari</li>
+        <li>Mozilla Firefox</li>
+      </ul>
+    </section>
+
+    <!-- ─── 5. VM Installation ────────────────── -->
+    <section id="install-vmware">
+      <h2>VM Installation</h2>
+      <p>Refer to the appropriate procedure in the tabs below, based on the Hypervisor used in your environment.</p>
+
+      <div class="tab-wrapper">
+        <div class="tab-buttons">
+          <button type="button" class="tab-btn active" onclick="showTab('vmware', this)">VMware ESXi</button>
+          <button type="button" class="tab-btn" onclick="showTab('hyperv', this)">Microsoft Hyper-V</button>
+          <button type="button" class="tab-btn" onclick="showTab('kvm', this)">Red Hat KVM</button>
+        </div>
+
+        <!-- VMware -->
+        <div id="tab-vmware" class="tab-content active" style="display: block;">
+          <div class="callout note">
+            <span class="icon">ℹ️</span>
+            <span>IQ Link is provided as an OVA file. It <strong>must be deployed through VMware vCenter</strong>; direct deployment to ESXi is not supported.</span>
+          </div>
+          <ol class="steps">
+            <li><div class="step-content">Log in to VMware vSphere Web Client with an administrator account.</div></li>
+            <li><div class="step-content">Right-click the appropriate vCenter object (Data Center, cluster, or ESXi host) and select <strong>Deploy OVF Template</strong>.</div></li>
+            <li><div class="step-content">Specify the OVA file path (URL or local path) and click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">Review the OVF Template information and click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">Specify the VM name and location, then click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">Select the ESXi host, cluster, or Resource Pool for deployment, then click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">Review the OVA details and click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">Select the deployment configuration and click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">Select the storage location for the VM files. <strong>Disk Format</strong> should use Thick Provisioning when possible.</div></li>
+            <li><div class="step-content">Map the network and click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">On the <strong>Ready to Complete</strong> screen, check <strong>Power On After Deployment</strong> and click <strong>Finish</strong>.</div></li>
+            <li>
+              <div class="step-content">
+                Right-click the VM → open <strong>Edit Settings</strong> to apply additional settings.
+                <ul style="margin-top:6px;padding-left:18px;font-size:0.88rem;color:var(--muted);">
+                  <li>CPU Shares: select <strong>Low</strong></li>
+                  <li>Memory: check <strong>Reserve all guest memory (All locked)</strong></li>
+                  <li>Set CPU/RAM based on the <a href="#prereq-hw">hardware requirements</a> table</li>
+                </ul>
+              </div>
+            </li>
+            <li><div class="step-content">Select the VM → <strong>Summary</strong> tab → click <strong>Launch Console</strong> to open the console.</div></li>
+            <li><div class="step-content">Go to the <a href="#network-config">Network Configuration</a> section to continue.</div></li>
+          </ol>
+        </div>
+
+        <!-- Hyper-V -->
+        <div id="tab-hyperv" class="tab-content" style="display: none;">
+          <div class="callout note">
+            <span class="icon">ℹ️</span>
+            <span>The Hyper-V package is provided as a <strong>.tar.gz</strong> file. After extraction, place the virtual hard disk files in the designated folder.</span>
+          </div>
+          <ol class="steps">
+            <li><div class="step-content">Log in to Hyper-V Server Manager with an administrator account.</div></li>
+            <li><div class="step-content">Extract the IQ Link .tar.gz package into the Virtual Hard Disks folder.</div></li>
+            <li><div class="step-content">Verify that all disk files are present in the folder.</div></li>
+            <li><div class="step-content">In Hyper-V Manager → Actions panel → select <strong>New &gt; Virtual Machine</strong> and click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">Enter the VM name and click <strong>Next</strong>.</div></li>
+            <li><div class="step-content">For generation, select <strong>Generation 2</strong>.</div></li>
+            <li><div class="step-content">Enter the recommended memory value. Leave <strong>Use Dynamic Memory</strong> unchecked.</div></li>
+            <li><div class="step-content">Select the appropriate network adapter.</div></li>
+            <li><div class="step-content">Attach the first virtual hard disk (Disk 1).</div></li>
+            <li><div class="step-content">Review the summary and click <strong>Finish</strong>.</div></li>
+            <li>
+              <div class="step-content">Right-click the VM → open <strong>Settings</strong> and apply the following.
+                <ul style="margin-top:6px;padding-left:18px;font-size:0.88rem;color:var(--muted);">
+                  <li>Security → <strong>clear Enable Secure Boot</strong></li>
+                  <li>Add the remaining two disks (repeat Add Hardware)</li>
+                  <li>Network Adapter → Advanced Features → <strong>check Enable device naming</strong></li>
+                  <li>Processors → set to the recommended vCPU count</li>
+                </ul>
+              </div>
+            </li>
+            <li><div class="step-content">In the Actions panel, click <strong>Start</strong> to power on the VM.</div></li>
+            <li><div class="step-content">In the Actions panel, click <strong>Connect</strong> to access the VM console.</div></li>
+            <li><div class="step-content">Go to the <a href="#network-config">Network Configuration</a> section to continue.</div></li>
+          </ol>
+        </div>
+
+        <!-- KVM -->
+        <div id="tab-kvm" class="tab-content" style="display: none;">
+          <div class="callout note">
+            <span class="icon">ℹ️</span>
+            <span>KVM installation uses Virtual Machine Manager (VMM) on a host based on <strong>RHEL v9.7</strong>.</span>
+          </div>
+          <ol class="steps">
+            <li><div class="step-content">Log in to the RHEL host server with an administrator account.</div></li>
+            <li><div class="step-content">Download the IQ Link package to the host and extract it.</div></li>
+            <li><div class="step-content">Launch the Virtual Machine Manager (VMM) client.</div></li>
+            <li><div class="step-content">In VMM, select <strong>File &gt; New Virtual Machine</strong>.</div></li>
+            <li><div class="step-content">Select <strong>Import existing disk image</strong> and click <strong>Forward</strong>.</div></li>
+            <li><div class="step-content">Click <strong>Browse</strong> and create a Storage Pool using the extracted IQ Link package path.</div></li>
+            <li><div class="step-content">Select the first disk and click <strong>Choose Volume</strong>.</div></li>
+            <li><div class="step-content">Select <strong>AlmaLinux 9</strong> as the OS type.</div></li>
+            <li><div class="step-content">Enter memory and CPU values according to the <a href="#prereq-hw">hardware requirements</a>.</div></li>
+            <li><div class="step-content">Enter the VM name and select <strong>Customize configuration before install</strong>. Also select the virtual network.</div></li>
+            <li><div class="step-content">Click <strong>Finish</strong> to complete adding the first disk.</div></li>
+            <li><div class="step-content">Use <strong>Add Hardware → Storage</strong> to add the remaining two disks one by one.</div></li>
+            <li><div class="step-content">Set the Bus Type of all disks to <strong>SCSI</strong>.</div></li>
+            <li><div class="step-content">In the Overview section, set Firmware to <strong>UEFI</strong>.</div></li>
+            <li><div class="step-content">Click <strong>Begin installation</strong>.</div></li>
+            <li><div class="step-content">Complete the password and IP configuration in the VMM console.</div></li>
+            <li><div class="step-content">Go to the <a href="#network-config">Network Configuration</a> section to continue.</div></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 6. Network Config ─────────────────── -->
+    <section id="network-config">
+      <h2>Network Configuration (VM Console)</h2>
+      <p>After the VM boots, configure the network from the console using the steps below.</p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            Access the VM console. When the login screen appears, enter <strong>admin</strong> for both the username and password.
+            <div class="callout warn" style="margin-top:8px">
+              <span class="icon">⚠️</span>
+              <span>These are the default credentials for initial setup only. Change the password immediately after installation is complete.</span>
+            </div>
+          </div>
+        </li>
+        <li><div class="step-content">When the Main Menu appears, enter <strong>"1"</strong> and press Enter to open network configuration.</div></li>
+        <li>
+          <div class="step-content">
+            Enter the following network information in order. If a detected value is shown, you can press Enter to keep it.
+            <table style="margin-top:10px">
+              <thead><tr><th>Item</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>IP address</td><td>Fixed IPv4 address to assign to the IQ Link VM</td></tr>
+                <tr><td>Gateway IP</td><td>Default gateway address</td></tr>
+                <tr><td>DNS IP list</td><td>DNS server addresses (multiple entries supported)</td></tr>
+                <tr><td>Search domain</td><td>DNS Search Domain (example: mydomain.com)</td></tr>
+                <tr><td>NTP server list</td><td>NTP server addresses (multiple entries allowed, separated by commas)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            Select the NTP authentication setting.
+            <ul style="padding-left:18px;margin-top:6px;font-size:0.88rem;color:var(--muted);">
+              <li><strong>N</strong>: continue without authentication</li>
+              <li><strong>Y → 1</strong>: traditional key-based authentication (requires algorithm + hexadecimal key input)</li>
+              <li><strong>Y → 2</strong>: use the NTS (Network Time Security) protocol</li>
+            </ul>
+          </div>
+        </li>
+        <li><div class="step-content">Review the password requirements shown on screen, then set and confirm the new password.</div></li>
+        <li><div class="step-content">Review the configuration summary and enter <strong>Y</strong> to apply it. This may take a few minutes.</div></li>
+        <li><div class="step-content">After confirming the success message, press Enter to return to the Main Menu.</div></li>
+      </ol>
+
+      <div class="callout tip">
+        <span class="icon">✅</span>
+        <div>
+          <strong>Recommendation:</strong> After completing network configuration, create a <strong>Snapshot</strong> of the current VM state in vCenter (or the relevant Hypervisor).
+          You can also continue additional work by connecting over SSH to the newly configured IP address.
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 7. IQ Link Install ────────────────── -->
+    <section id="iqlink-install">
+      <h2>Cisco IQ Link Installation (Web Installer)</h2>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <div>
+          <strong>Prerequisite:</strong> Before starting installation, first begin adding the IQ Link instance in the <strong>Cisco IQ portal</strong>.<br>
+          Path: <code>Cisco IQ → Home → System Settings → Data Connectors → Add Cisco IQ Link</code>
+        </div>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            After completing VM network configuration, open the IQ Link Installer page in a web browser.<br>
+            (Use the URL provided during the VM configuration process.)
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            Select the region from the <strong>Region</strong> dropdown.
+            <div class="callout note" style="margin-top:8px">
+              <span class="icon">ℹ️</span>
+              <span>Customers in Korea should select <strong>APJC</strong>.</span>
+            </div>
+          </div>
+        </li>
+        <li><div class="step-content">Click the <strong>Start</strong> button. The <strong>Check Internet Connectivity</strong> tab appears.</div></li>
+        <li>
+          <div class="step-content">
+            If a Proxy is required, enter the information below. If your environment uses direct connectivity, skip this step.
+            <ul style="padding-left:18px;margin-top:6px;font-size:0.88rem;color:var(--muted);">
+              <li>Proxy Hostname / IP</li>
+              <li>Port number</li>
+              <li>If authentication is required, enable the <strong>Enable Authentication</strong> toggle and enter Username/Password</li>
+            </ul>
+          </div>
+        </li>
+        <li><div class="step-content">Click the <strong>Test Connectivity</strong> button to validate internet connectivity.</div></li>
+        <li>
+          <div class="step-content">
+            Click <strong>Next</strong>. The <strong>Connect Cisco IQ Link</strong> tab displays the <strong>Device ID</strong> and <strong>Claim code</strong>.
+            <div class="callout warn" style="margin-top:8px">
+              <span class="icon">⚠️</span>
+              <span>The Device ID and Claim code are <strong>automatically refreshed after 5 minutes</strong>. Proceed quickly to the next step.</span>
+            </div>
+          </div>
+        </li>
+        <li><div class="step-content">In the browser, go to the <strong>Cisco IQ portal</strong>. Confirm that the <strong>Add Cisco IQ Link</strong> page is open.</div></li>
+        <li><div class="step-content">Select the <strong>"I am ready to pair with an installed Cisco IQ Link"</strong> checkbox and click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Enter a <strong>unique name</strong> to identify this IQ Link instance and click <strong>Next</strong>.</div></li>
+        <li><div class="step-content">Enter the <strong>Device ID</strong> and <strong>Claim code</strong> shown in the IQ Link Installer, then click <strong>Submit</strong>. You will be redirected to the Data Connectors page.</div></li>
+        <li><div class="step-content">Return to the IQ Link Installer web page. The <strong>Check Network Requirements</strong> page appears.</div></li>
+        <li><div class="step-content">Click <strong>Next</strong>. The <strong>Configure Internal Network</strong> tab appears.</div></li>
+        <li>
+          <div class="step-content">
+            Enter the Internal Network IP range.
+            <div class="callout warn" style="margin-top:8px">
+              <span class="icon">⚠️</span>
+              <span>This IP range is reserved for IQ Link internal communication. Make sure it <strong>does not overlap with the IPs of external devices</strong> (DNS, NTP, data sources, and so on). If it overlaps, those devices will not be reachable.</span>
+            </div>
+          </div>
+        </li>
+        <li><div class="step-content">Click <strong>Next</strong>. The <strong>Installation Result</strong> page appears, and installation is complete.</div></li>
+        <li>
+          <div class="step-content">
+            After installation completes, the Cisco IQ Link login page opens in the browser.
+            Log in using the admin account and password configured during network setup.
+            <div class="callout tip" style="margin-top:8px">
+              <span class="icon">✅</span>
+              <span>If the home screen appears after login, the installation has completed successfully.</span>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <span>Afterward, add network device connections in IQ Link under <strong>System Settings → Connection Management</strong>.</span>
+      </div>
+    </section>
+
+    <!-- ─── 8. Checklist ─────────────────────── -->
+    <section id="checklist">
+      <h2>Installation Checklist</h2>
+      <div class="card">
+        <h4>Pre-installation Checks</h4>
+        <ul class="check" style="margin-top:10px">
+          <li>Determine VM specifications (vCPU/RAM/Storage based on device count)</li>
+          <li>Secure a fixed IP address and register DNS A/PTR records</li>
+          <li>Allow outbound ports 443 and 22 on the firewall (including UDP 53, 123, and 161)</li>
+          <li>Whitelist APJC FQDNs: <code>ap-southeast-2.iq.cisco.com</code>, <code>ng.acs.agent.apjc.csco.cloud</code></li>
+          <li>Confirm Proxy information (IP, Port, whether authentication is required)</li>
+          <li>Complete download of the IQ Link OVA / .tar.gz / KVM package</li>
+          <li>Confirm Cisco IQ portal access permissions</li>
+          <li>Allocate 600 GB SSD Thick Provisioning storage</li>
+          <li>Confirm disk write speed is at least 70 MB/s</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h4>Post-installation Checks</h4>
+        <ul class="check" style="margin-top:10px">
+          <li>Successful login to the IQ Link Web UI</li>
+          <li>New IQ Link instance appears in the Data Connectors list in the Cisco IQ portal</li>
+          <li>System Settings → NTP synchronization status is normal</li>
+          <li>VM Snapshot created successfully</li>
+          <li>Initial admin password changed</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── 9. Troubleshooting ───────────────── -->
+    <section id="troubleshoot">
+      <h2>Troubleshooting</h2>
+
+      <table>
+        <thead>
+          <tr><th>Symptom</th><th>Cause</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Internet connectivity test fails</td>
+            <td>Firewall blocking, Proxy configuration error</td>
+            <td>Check firewall policy, re-enter Proxy IP/Port/authentication information</td>
+          </tr>
+          <tr>
+            <td>Device ID / Claim code expired</td>
+            <td>Automatically refreshed after 5 minutes</td>
+            <td>Check the new code on the IQ Link Installer page and re-enter it</td>
+          </tr>
+          <tr>
+            <td>DNS lookup fails</td>
+            <td>DNS server not configured or missing A/PTR records</td>
+            <td>Recheck the DNS IP, create the A record and PTR record</td>
+          </tr>
+          <tr>
+            <td>NTP synchronization fails</td>
+            <td>UDP 123 blocked or NTP server not responding</td>
+            <td>Verify NTP server reachability and allow port 123</td>
+          </tr>
+          <tr>
+            <td>Storage capacity warning</td>
+            <td>Overcommitment caused by Thin Provisioning</td>
+            <td>Redeploy using Thick Provisioning</td>
+          </tr>
+          <tr>
+            <td>Internal Network IP conflict</td>
+            <td>The entered IP range overlaps with existing devices</td>
+            <td>Check the IP ranges already in use and reconfigure with a non-overlapping range</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <span>If additional assistance is required, open a <a href="https://mycase.cloudapps.cisco.com/start" target="_blank">Cisco Support Case</a>. A Cisco Service Contract is required.</span>
+      </div>
+    </section>
+
+    <!-- ─── 10. References ───────────────────── -->
+    <section id="references">
+      <h2>Reference Documents</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4>Cisco IQ Link Getting Started Guide</h4>
+          <p style="margin-top:6px"><a href="https://www.cisco.com/c/en/us/support/docs/cx/iq-link/cx225764-cisco-iq-link-getting-started-guide.html" target="_blank">Official cisco.com document (English) →</a></p>
+        </div>
+        <div class="card">
+          <h4>Cisco IQ Documentation</h4>
+          <p style="margin-top:6px"><a href="https://www.cisco.com/c/en/us/support/cx/cisco-iq.html" target="_blank">Official cisco.com document (English) →</a></p>
+        </div>
+        <div class="card">
+          <h4>Cisco IQ Getting Started Guide</h4>
+          <p style="margin-top:6px"><a href="https://www.cisco.com/c/en/us/support/docs/cx/cisco-iq/getting-started-guide/cx225778-cisco-iq-getting-started-guide.html" target="_blank">Official cisco.com document (English) →</a></p>
+        </div>
+        <div class="card">
+          <h4>Open a Cisco Support Case</h4>
+          <p style="margin-top:6px"><a href="https://mycase.cloudapps.cisco.com/start" target="_blank">Open Support Case →</a></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>This is an unofficial English guide prepared for customer operations teams.</p>
+  <p style="margin-top:4px">Original source: <a href="https://www.cisco.com/c/en/us/support/docs/cx/iq-link/cx225764-cisco-iq-link-getting-started-guide.html" target="_blank">Cisco IQ Link Getting Started Guide v1.1.0</a> &nbsp;|&nbsp; © Cisco Systems, Inc.</p>
+</footer>
+
+<script>
+  window.showTab = (name, btn) => {
+    // hide all tabs
+    document.querySelectorAll('.tab-content').forEach(el => {
+      el.style.display = 'none';
+      el.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active');
+    });
+
+    // show selected
+    const target = document.getElementById(`tab-${name}`);
+    if (target) { target.style.display = 'block'; target.classList.add('active'); }
+    btn.classList.add('active');
+  };
+</script>
+
+
+</body></html>

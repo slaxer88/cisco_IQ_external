@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<!-- Cisco IQ Link 설치 가이드 (한국어) -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cisco IQ Link 설치 가이드 (한국어)</title>
+  <style>
+    :root {
+      --cisco-blue: #049fd9;
+      --cisco-dark: #1b2a32;
+      --cisco-mid: #2e4251;
+      --accent: #00bceb;
+      --warn: #f7941d;
+      --danger: #e2231a;
+      --success: #6abf69;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --muted: #5a6a72;
+      --border: #d0dde5;
+      --code-bg: #eef2f5;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    /* ── Header ─────────────────────────────── */
+    header {
+      background: var(--cisco-dark);
+      color: #fff;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    header .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--cisco-blue);
+      letter-spacing: 1px;
+    }
+    header .title {
+      font-size: 1rem;
+      color: #c5d3da;
+      border-left: 1px solid #3a5060;
+      padding-left: 20px;
+    }
+    header .version {
+      margin-left: auto;
+      font-size: 0.78rem;
+      background: var(--cisco-mid);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+
+    /* ── Layout ──────────────────────────────── */
+    .wrapper {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ── Sidebar ─────────────────────────────── */
+    nav {
+      background: var(--cisco-mid);
+      color: #c5d3da;
+      padding: 28px 0;
+      position: sticky;
+      top: 64px;
+      height: calc(100vh - 64px);
+      overflow-y: auto;
+    }
+    nav .nav-section {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--cisco-blue);
+      padding: 16px 22px 6px;
+      font-weight: 700;
+    }
+    nav a {
+      display: block;
+      color: #c5d3da;
+      text-decoration: none;
+      padding: 7px 22px;
+      font-size: 0.85rem;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    nav a:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      border-left-color: var(--cisco-blue);
+    }
+
+    /* ── Main ────────────────────────────────── */
+    main {
+      padding: 40px 48px;
+      max-width: 960px;
+    }
+
+    /* ── Section headings ───────────────────── */
+    h1 { font-size: 1.9rem; color: var(--cisco-dark); margin-bottom: 8px; }
+    h2 {
+      font-size: 1.35rem;
+      color: var(--cisco-dark);
+      margin: 44px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--cisco-blue);
+    }
+    h3 {
+      font-size: 1.05rem;
+      color: var(--cisco-mid);
+      margin: 26px 0 10px;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    /* ── Cards ───────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin: 16px 0;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .card-grid .card {
+      margin: 0;
+    }
+    .card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+    .card h4 {
+      font-size: 0.95rem;
+      color: var(--cisco-dark);
+      margin-bottom: 6px;
+    }
+    .card p, .card li {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    /* ── Callout boxes ───────────────────────── */
+    .callout {
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin: 14px 0;
+      font-size: 0.88rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .callout .icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+    .callout.note  { background: #e8f5fb; border-left: 4px solid var(--cisco-blue); }
+    .callout.warn  { background: #fff4e5; border-left: 4px solid var(--warn); }
+    .callout.danger{ background: #fdecea; border-left: 4px solid var(--danger); }
+    .callout.tip   { background: #e9f7ea; border-left: 4px solid var(--success); }
+
+    /* ── Tables ──────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.87rem;
+    }
+    th {
+      background: var(--cisco-dark);
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:nth-child(even) td { background: #f7fafc; }
+    td code, th code {
+      background: var(--code-bg);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 0.84rem;
+    }
+
+    /* ── Ordered step list ───────────────────── */
+    ol.steps {
+      list-style: none;
+      counter-reset: step;
+      padding: 0;
+    }
+    ol.steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin: 12px 0;
+    }
+    ol.steps li::before {
+      content: counter(step);
+      background: var(--cisco-blue);
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    ol.steps li .step-content { flex: 1; }
+
+    ul.check { list-style: none; padding: 0; }
+    ul.check li::before { content: "✓ "; color: var(--success); font-weight: 700; }
+    ul.check li { margin: 5px 0; font-size: 0.9rem; }
+
+    /* ── Tabs ────────────────────────────────── */
+    .tab-wrapper { margin: 20px 0; }
+    .tab-buttons {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 0;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 9px 18px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      color: var(--muted);
+      border-radius: 6px 6px 0 0;
+      font-weight: 500;
+    }
+    .tab-btn.active {
+      background: var(--cisco-blue);
+      color: #fff;
+    }
+    .tab-content { display: none; }
+    .tab-content.active {
+      display: block;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      padding: 20px 24px;
+    }
+
+    /* ── Flow diagram ────────────────────────── */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 20px 0;
+    }
+    .flow-step {
+      background: var(--cisco-blue);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    .flow-arrow { color: var(--muted); font-size: 1.1rem; }
+
+    /* ── FQDN badge ──────────────────────────── */
+    .badge {
+      display: inline-block;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      color: var(--cisco-dark);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.83rem;
+    }
+
+    /* ── Footer ──────────────────────────────── */
+    footer {
+      background: var(--cisco-dark);
+      color: #8a9faa;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.8rem;
+    }
+    footer a { color: var(--cisco-blue); text-decoration: none; }
+
+    /* ── Responsive ──────────────────────────── */
+    @media (max-width: 820px) {
+      .wrapper { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; }
+      main { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════ HEADER ══════════════════ -->
+<header>
+  <div class="logo">CISCO</div>
+  <div class="title">IQ Link 설치 가이드</div>
+  <div class="version">v1.1.0 &nbsp;|&nbsp; 2026.04</div>
+</header>
+
+<div class="wrapper">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <nav>
+    <div class="nav-section">개요</div>
+    <a href="#overview">Cisco IQ 소개</a>
+    <a href="#architecture">아키텍처</a>
+
+    <div class="nav-section">사전 준비</div>
+    <a href="#prereq-hw">하드웨어 요구사항</a>
+    <a href="#prereq-net">네트워크 요구사항</a>
+    <a href="#prereq-browser">지원 브라우저</a>
+
+    <div class="nav-section">VM 설치</div>
+    <a href="#install-vmware">VMware ESXi</a>
+    <a href="#install-hyperv">Hyper-V</a>
+    <a href="#install-kvm">KVM</a>
+    <a href="#network-config">네트워크 설정</a>
+
+    <div class="nav-section">IQ Link 설치</div>
+    <a href="#iqlink-install">설치 절차</a>
+
+    <div class="nav-section">참고</div>
+    <a href="#checklist">설치 체크리스트</a>
+    <a href="#troubleshoot">문제 해결</a>
+    <a href="#references">참고 문서</a>
+  </nav>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <main>
+
+    <!-- ─── 1. Overview ──────────────────────── -->
+    <section id="overview">
+      <h1>Cisco IQ Link 설치 가이드</h1>
+      <p class="subtitle">한국 고객 운영팀을 위한 공식 설치 가이드 (Korean Edition) &nbsp;|&nbsp; 최종 업데이트: 2026년 4월</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon">🌐</div>
+          <h4>Cisco IQ란?</h4>
+          <p>AI 기반의 통합 네트워크 관리 플랫폼으로, 자산 가시성 향상, 취약점 탐지, Support 연동을 하나의 인터페이스에서 제공합니다.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔗</div>
+          <h4>Cisco IQ Link란?</h4>
+          <p>고객 Data Center 내에 설치되는 On-Premises Connector입니다. 네트워크 장비의 Telemetry 데이터를 안전하게 수집하여 Cisco IQ SaaS로 전송합니다.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🤖</div>
+          <h4>AI Assistant</h4>
+          <p>운영 데이터를 기반으로 예측 인사이트를 제공하고, 장애 사전 감지 및 운영 효율화를 지원합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Architecture ─────────────────────── -->
+    <section id="architecture">
+      <h2>아키텍처 개요</h2>
+      <p>Cisco IQ Link는 고객 내부망에 위치하며, 네트워크 장비로부터 데이터를 수집한 후 HTTPS(443)를 통해 Cisco IQ Cloud로 안전하게 전송합니다.</p>
+
+      <div class="flow">
+        <div class="flow-step">고객 네트워크<br>장비 (NW Devices)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Cisco IQ Link<br>(On-Premises VM)</div>
+        <div class="flow-arrow">→ HTTPS 443 →</div>
+        <div class="flow-step">Cisco IQ<br>SaaS Cloud</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">운영팀<br>(Web Browser)</div>
+      </div>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <span>IQ Link는 단방향(아웃바운드) 통신만 사용합니다. 외부에서 고객 내부망으로의 인바운드 접속은 없습니다.</span>
+      </div>
+    </section>
+
+    <!-- ─── 2. HW Requirements ───────────────── -->
+    <section id="prereq-hw">
+      <h2>사전 준비 — 하드웨어 / VM 리소스</h2>
+      <p>관리 대상 장비(Device) 수량에 따라 아래 표를 참고하여 VM 사양을 결정하십시오.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>리소스</th>
+            <th>10K Devices</th>
+            <th>20K Devices</th>
+            <th>50K Devices</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>vCPU</td><td>16</td><td>16</td><td>32</td></tr>
+          <tr><td>RAM</td><td>28 GB</td><td>28 GB</td><td>48 GB</td></tr>
+          <tr><td>Storage (SSD 권장)</td><td>600 GB</td><td>600 GB</td><td>600 GB</td></tr>
+          <tr><td>수집 주기</td><td>24시간 이상</td><td>24시간 이상</td><td>7일 이상</td></tr>
+        </tbody>
+      </table>
+
+      <h3>지원 Hypervisor</h3>
+      <ul class="check">
+        <li>VMware ESXi v8.0 이상 + VMware vSphere Web Client v8.0 이상</li>
+        <li>Hyper-V on Microsoft Server 2022 / 2025</li>
+        <li>KVM (RHEL v9.7 기반)</li>
+      </ul>
+
+      <div class="callout warn">
+        <span class="icon">⚠️</span>
+        <div>
+          <strong>Thick Provisioning 권장:</strong> Thin Provisioning 사용 시 스토리지 과할당으로 인해 서비스 장애가 발생할 수 있습니다.
+          디스크 쓰기 속도는 반드시 <strong>70 MB/s 이상</strong>이어야 합니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 3. Network Requirements ─────────── -->
+    <section id="prereq-net">
+      <h2>사전 준비 — 네트워크 요구사항</h2>
+
+      <h3>IP / DNS 설정</h3>
+      <ul class="check">
+        <li>고정 IPv4 주소 필수 (DHCP 미지원)</li>
+        <li>DNS A 레코드: 호스트명 → IPv4 주소 매핑 필요 (예: <code>ciscoiqlink.mydomain.com</code>)</li>
+        <li>DNS PTR 레코드: 역방향 조회(Reverse Lookup) 지원 필요</li>
+      </ul>
+
+      <h3>Cisco IQ SaaS 연결 FQDN</h3>
+      <p>IQ Link가 설치된 리전에 맞는 FQDN으로 아웃바운드 연결이 허용되어야 합니다.</p>
+
+      <table>
+        <thead>
+          <tr><th>리전</th><th>FQDN (허용 필요)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AMER (미주)</td>
+            <td>
+              <span class="badge">us-west-2.iq.cisco.com</span><br>
+              <span class="badge">ng.acs.agent.us.csco.cloud</span>
+            </td>
+          </tr>
+          <tr>
+            <td>EMEA (유럽/중동/아프리카)</td>
+            <td>
+              <span class="badge">eu-central-1.iq.cisco.com</span><br>
+              <span class="badge">ng.acs.agent.emea.csco.cloud</span>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>APJC (아시아/한국)</strong></td>
+            <td>
+              <span class="badge">ap-southeast-2.iq.cisco.com</span><br>
+              <span class="badge">ng.acs.agent.apjc.csco.cloud</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <span>한국 고객은 <strong>APJC</strong> 리전을 선택하십시오.</span>
+      </div>
+
+      <h3>포트 요구사항</h3>
+      <table>
+        <thead>
+          <tr><th>포트</th><th>프로토콜</th><th>용도</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>22</td><td>TCP</td><td>관리자 CLI 접속 및 Cisco Support 디버깅 세션</td></tr>
+          <tr><td>443</td><td>TCP</td><td>IQ Link UI/API 통신 및 Cisco IQ Cloud 연결</td></tr>
+          <tr><td>53</td><td>UDP</td><td>DNS 질의</td></tr>
+          <tr><td>123</td><td>UDP</td><td>NTP (시간 동기화)</td></tr>
+          <tr><td>161</td><td>UDP</td><td>SNMP (장비 데이터 수집)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout warn">
+        <span class="icon">⚠️</span>
+        <span>Proxy 환경인 경우, 설치 과정에서 Proxy IP/Port/인증 정보를 별도로 입력해야 합니다. 사전에 네트워크 팀에 확인하십시오.</span>
+      </div>
+    </section>
+
+    <!-- ─── 4. Supported Browsers ────────────── -->
+    <section id="prereq-browser">
+      <h2>사전 준비 — 지원 브라우저</h2>
+      <p>최신 안정 버전(Stable Release) 사용을 권장합니다. 구버전은 일부 기능이 동작하지 않을 수 있습니다.</p>
+      <ul class="check">
+        <li>Google Chrome</li>
+        <li>Microsoft Edge</li>
+        <li>Apple Safari</li>
+        <li>Mozilla Firefox</li>
+      </ul>
+    </section>
+
+    <!-- ─── 5. VM Installation ────────────────── -->
+    <section id="install-vmware">
+      <h2>VM 설치</h2>
+      <p>고객 환경의 Hypervisor 종류에 따라 아래 탭에서 해당 절차를 참고하십시오.</p>
+
+      <div class="tab-wrapper">
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="showTab(&#39;vmware&#39;, this)">VMware ESXi</button>
+          <button class="tab-btn" onclick="showTab(&#39;hyperv&#39;, this)">Microsoft Hyper-V</button>
+          <button class="tab-btn" onclick="showTab(&#39;kvm&#39;, this)">Red Hat KVM</button>
+        </div>
+
+        <!-- VMware -->
+        <div id="tab-vmware" class="tab-content active" style="display: block;">
+          <div class="callout note">
+            <span class="icon">ℹ️</span>
+            <span>IQ Link는 OVA 파일 형태로 제공됩니다. <strong>반드시 VMware vCenter를 통해 배포</strong>해야 하며, ESXi에 직접 배포하는 방식은 지원되지 않습니다.</span>
+          </div>
+          <ol class="steps">
+            <li><div class="step-content">VMware vSphere Web Client에 관리자 계정으로 로그인합니다.</div></li>
+            <li><div class="step-content">적절한 vCenter 오브젝트(데이터센터, 클러스터, ESXi 호스트)를 우클릭하고 <strong>Deploy OVF Template</strong>을 선택합니다.</div></li>
+            <li><div class="step-content">OVA 파일의 경로(URL 또는 로컬 경로)를 지정하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content">OVF Template 정보를 확인하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content">VM 이름과 위치(Location)를 지정하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content">배포할 ESXi 호스트, 클러스터 또는 Resource Pool을 선택하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content">OVA 세부 정보를 검토하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content">배포 구성(Configuration)을 선택하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content">VM 파일을 저장할 스토리지를 선택합니다. <strong>Disk Format</strong>은 Thick Provisioning을 권장합니다.</div></li>
+            <li><div class="step-content">네트워크를 매핑하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content"><strong>Ready to Complete</strong> 화면에서 <strong>Power On After Deployment</strong>를 체크하고 <strong>Finish</strong>를 클릭합니다.</div></li>
+            <li>
+              <div class="step-content">
+                VM을 우클릭 → <strong>Edit Settings</strong>에서 추가 설정을 진행합니다.
+                <ul style="margin-top:6px;padding-left:18px;font-size:0.88rem;color:var(--muted);">
+                  <li>CPU Shares: <strong>Low</strong> 선택</li>
+                  <li>Memory: <strong>Reserve all guest memory (All locked)</strong> 체크</li>
+                  <li>CPU/RAM은 <a href="#prereq-hw">하드웨어 요구사항</a> 표를 참고하여 설정</li>
+                </ul>
+              </div>
+            </li>
+            <li><div class="step-content">VM 선택 → <strong>Summary</strong> 탭 → <strong>Launch Console</strong>을 클릭하여 콘솔을 시작합니다.</div></li>
+            <li><div class="step-content"><a href="#network-config">네트워크 설정</a> 섹션으로 이동하여 계속 진행합니다.</div></li>
+          </ol>
+        </div>
+
+        <!-- Hyper-V -->
+        <div id="tab-hyperv" class="tab-content" style="display: none;">
+          <div class="callout note">
+            <span class="icon">ℹ️</span>
+            <span>Hyper-V 패키지는 <strong>.tar.gz</strong> 파일로 제공됩니다. 압축 해제 후 가상 하드 디스크 파일을 지정된 폴더에 위치시킵니다.</span>
+          </div>
+          <ol class="steps">
+            <li><div class="step-content">Hyper-V Server Manager에 관리자 계정으로 로그인합니다.</div></li>
+            <li><div class="step-content">IQ Link .tar.gz 패키지를 Virtual Hard Disks 폴더에 압축 해제합니다.</div></li>
+            <li><div class="step-content">모든 디스크 파일이 폴더에 있는지 확인합니다.</div></li>
+            <li><div class="step-content">Hyper-V Manager → Actions 패널 → <strong>New &gt; Virtual Machine</strong>을 선택하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content">VM 이름을 입력하고 <strong>Next</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content">세대는 <strong>Generation 2</strong>를 선택합니다.</div></li>
+            <li><div class="step-content">권장 메모리 값을 입력합니다. <strong>Use Dynamic Memory</strong>는 체크 해제 상태로 유지합니다.</div></li>
+            <li><div class="step-content">적절한 네트워크 어댑터를 선택합니다.</div></li>
+            <li><div class="step-content">첫 번째 가상 하드 디스크(Disk 1)를 연결합니다.</div></li>
+            <li><div class="step-content">Summary를 확인하고 <strong>Finish</strong>를 클릭합니다.</div></li>
+            <li>
+              <div class="step-content">VM 우클릭 → <strong>Settings</strong> 진입 후 아래 설정을 적용합니다.
+                <ul style="margin-top:6px;padding-left:18px;font-size:0.88rem;color:var(--muted);">
+                  <li>Security → <strong>Enable Secure Boot 체크 해제</strong></li>
+                  <li>나머지 디스크 2개 추가 (Add Hardware 반복)</li>
+                  <li>Network Adapter → Advanced Features → <strong>Enable device naming 체크</strong></li>
+                  <li>Processors → 권장 vCPU 수로 설정</li>
+                </ul>
+              </div>
+            </li>
+            <li><div class="step-content">Actions 패널 → <strong>Start</strong>로 VM을 시작합니다.</div></li>
+            <li><div class="step-content">Actions 패널 → <strong>Connect</strong>로 VM 콘솔에 접속합니다.</div></li>
+            <li><div class="step-content"><a href="#network-config">네트워크 설정</a> 섹션으로 이동하여 계속 진행합니다.</div></li>
+          </ol>
+        </div>
+
+        <!-- KVM -->
+        <div id="tab-kvm" class="tab-content" style="display: none;">
+          <div class="callout note">
+            <span class="icon">ℹ️</span>
+            <span>KVM 설치는 <strong>RHEL v9.7</strong> 기반 호스트에서 Virtual Machine Manager(VMM)를 사용합니다.</span>
+          </div>
+          <ol class="steps">
+            <li><div class="step-content">RHEL 호스트 서버에 관리자 계정으로 로그인합니다.</div></li>
+            <li><div class="step-content">IQ Link 패키지를 호스트에 다운로드하고 압축을 해제합니다.</div></li>
+            <li><div class="step-content">Virtual Machine Manager(VMM) 클라이언트를 실행합니다.</div></li>
+            <li><div class="step-content">VMM에서 <strong>File &gt; New Virtual Machine</strong>을 선택합니다.</div></li>
+            <li><div class="step-content"><strong>Import existing disk image</strong>를 선택하고 <strong>Forward</strong>를 클릭합니다.</div></li>
+            <li><div class="step-content"><strong>Browse</strong>를 클릭하여 IQ Link 패키지 압축 해제 경로로 Storage Pool을 생성합니다.</div></li>
+            <li><div class="step-content">첫 번째 디스크를 선택하고 <strong>Choose Volume</strong>을 클릭합니다.</div></li>
+            <li><div class="step-content">OS 유형으로 <strong>AlmaLinux 9</strong>를 선택합니다.</div></li>
+            <li><div class="step-content">메모리와 CPU를 <a href="#prereq-hw">하드웨어 요구사항</a>에 맞게 입력합니다.</div></li>
+            <li><div class="step-content">VM 이름을 입력하고 <strong>Customize configuration before install</strong>을 선택합니다. 가상 네트워크도 선택합니다.</div></li>
+            <li><div class="step-content"><strong>Finish</strong>를 클릭하여 첫 번째 디스크 추가를 완료합니다.</div></li>
+            <li><div class="step-content"><strong>Add Hardware → Storage</strong>로 나머지 디스크 2개를 순차적으로 추가합니다.</div></li>
+            <li><div class="step-content">모든 디스크의 Bus Type을 <strong>SCSI</strong>로 설정합니다.</div></li>
+            <li><div class="step-content">Overview 섹션에서 Firmware를 <strong>UEFI</strong>로 설정합니다.</div></li>
+            <li><div class="step-content"><strong>Begin installation</strong>을 클릭합니다.</div></li>
+            <li><div class="step-content">VMM 콘솔에서 패스워드 및 IP 설정을 완료합니다.</div></li>
+            <li><div class="step-content"><a href="#network-config">네트워크 설정</a> 섹션으로 이동하여 계속 진행합니다.</div></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 6. Network Config ─────────────────── -->
+    <section id="network-config">
+      <h2>네트워크 설정 (VM 콘솔)</h2>
+      <p>VM이 부팅된 후 콘솔에서 아래 절차에 따라 네트워크를 구성합니다.</p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            VM 콘솔에 접속합니다. 로그인 화면이 표시되면 아이디/패스워드를 모두 <strong>admin</strong>으로 입력합니다.
+            <div class="callout warn" style="margin-top:8px">
+              <span class="icon">⚠️</span>
+              <span>초기 설정 전용 기본 자격증명입니다. 설치 완료 후 반드시 비밀번호를 변경하십시오.</span>
+            </div>
+          </div>
+        </li>
+        <li><div class="step-content">Main Menu가 표시되면 <strong>"1"</strong>을 입력하고 Enter를 눌러 네트워크 설정으로 진입합니다.</div></li>
+        <li>
+          <div class="step-content">
+            아래 네트워크 정보를 순서대로 입력합니다. 감지된 값이 있으면 Enter로 그대로 사용할 수 있습니다.
+            <table style="margin-top:10px">
+              <thead><tr><th>항목</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td>IP address</td><td>IQ Link VM에 할당할 고정 IPv4 주소</td></tr>
+                <tr><td>Gateway IP</td><td>기본 게이트웨이 주소</td></tr>
+                <tr><td>DNS IP list</td><td>DNS 서버 주소 (복수 입력 가능)</td></tr>
+                <tr><td>Search domain</td><td>DNS Search Domain (예: mydomain.com)</td></tr>
+                <tr><td>NTP server list</td><td>NTP 서버 주소 (쉼표로 구분하여 복수 입력 가능)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            NTP 인증 설정을 선택합니다.
+            <ul style="padding-left:18px;margin-top:6px;font-size:0.88rem;color:var(--muted);">
+              <li><strong>N</strong>: 인증 없이 진행</li>
+              <li><strong>Y → 1</strong>: 전통적 키 기반 인증 (알고리즘 + 16진수 키 입력 필요)</li>
+              <li><strong>Y → 2</strong>: NTS (Network Time Security) 프로토콜 사용</li>
+            </ul>
+          </div>
+        </li>
+        <li><div class="step-content">화면의 패스워드 조건을 확인한 후 새 비밀번호를 설정하고 확인 입력을 합니다.</div></li>
+        <li><div class="step-content">설정 요약을 검토하고 <strong>Y</strong>를 입력하여 적용합니다. 몇 분 정도 소요될 수 있습니다.</div></li>
+        <li><div class="step-content">성공 메시지 확인 후 Enter를 눌러 Main Menu로 돌아옵니다.</div></li>
+      </ol>
+
+      <div class="callout tip">
+        <span class="icon">✅</span>
+        <div>
+          <strong>권장 사항:</strong> 네트워크 설정 완료 후 vCenter(또는 해당 하이퍼바이저)에서 현재 VM 상태의 <strong>Snapshot</strong>을 생성해 두십시오.
+          이후 SSH를 통해 새로 설정한 IP로 접속하여 추가 작업을 진행할 수도 있습니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 7. IQ Link Install ────────────────── -->
+    <section id="iqlink-install">
+      <h2>Cisco IQ Link 설치 (Web Installer)</h2>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <div>
+          <strong>사전 조건:</strong> 설치 시작 전 <strong>Cisco IQ 포털</strong>에서 IQ Link 인스턴스 추가를 먼저 시작해야 합니다.<br>
+          경로: <code>Cisco IQ → Home → System Settings → Data Connectors → Add Cisco IQ Link</code>
+        </div>
+      </div>
+
+      <ol class="steps">
+        <li>
+          <div class="step-content">
+            VM 네트워크 설정 완료 후 웹 브라우저에서 IQ Link Installer 페이지에 접속합니다.<br>
+            (VM 구성 과정에서 안내된 URL 사용)
+          </div>
+        </li>
+        <li>
+          <div class="step-content">
+            <strong>Region</strong> 드롭다운에서 리전을 선택합니다.
+            <div class="callout note" style="margin-top:8px">
+              <span class="icon">ℹ️</span>
+              <span>한국 고객은 <strong>APJC</strong>를 선택합니다.</span>
+            </div>
+          </div>
+        </li>
+        <li><div class="step-content"><strong>Start</strong> 버튼을 클릭합니다. <strong>Check Internet Connectivity</strong> 탭이 표시됩니다.</div></li>
+        <li>
+          <div class="step-content">
+            Proxy가 필요한 경우 아래 정보를 입력합니다. 직접 연결 환경이라면 이 단계를 건너뜁니다.
+            <ul style="padding-left:18px;margin-top:6px;font-size:0.88rem;color:var(--muted);">
+              <li>Proxy Hostname / IP</li>
+              <li>Port 번호</li>
+              <li>인증이 필요한 경우 <strong>Enable Authentication</strong> 토글 활성화 후 Username/Password 입력</li>
+            </ul>
+          </div>
+        </li>
+        <li><div class="step-content"><strong>Test Connectivity</strong> 버튼을 클릭하여 인터넷 연결을 검증합니다.</div></li>
+        <li>
+          <div class="step-content">
+            <strong>Next</strong>를 클릭하면 <strong>Connect Cisco IQ Link</strong> 탭에 <strong>Device ID</strong>와 <strong>Claim code</strong>가 표시됩니다.
+            <div class="callout warn" style="margin-top:8px">
+              <span class="icon">⚠️</span>
+              <span>Device ID와 Claim code는 <strong>5분 후 자동 갱신</strong>됩니다. 다음 단계를 신속하게 진행하십시오.</span>
+            </div>
+          </div>
+        </li>
+        <li><div class="step-content">브라우저에서 <strong>Cisco IQ 포털</strong>로 이동합니다. <strong>Add Cisco IQ Link</strong> 페이지가 열려 있는지 확인합니다.</div></li>
+        <li><div class="step-content"><strong>"I am ready to pair with an installed Cisco IQ Link"</strong> 체크박스를 선택하고 <strong>Next</strong>를 클릭합니다.</div></li>
+        <li><div class="step-content">이 IQ Link 인스턴스를 식별할 <strong>고유한 이름</strong>을 입력하고 <strong>Next</strong>를 클릭합니다.</div></li>
+        <li><div class="step-content">IQ Link Installer에서 확인한 <strong>Device ID</strong>와 <strong>Claim code</strong>를 입력하고 <strong>Submit</strong>을 클릭합니다. Data Connectors 페이지로 이동됩니다.</div></li>
+        <li><div class="step-content">IQ Link Installer 웹 페이지로 돌아옵니다. <strong>Check Network Requirements</strong> 페이지가 표시됩니다.</div></li>
+        <li><div class="step-content"><strong>Next</strong>를 클릭합니다. <strong>Configure Internal Network</strong> 탭이 표시됩니다.</div></li>
+        <li>
+          <div class="step-content">
+            Internal Network IP 범위를 입력합니다.
+            <div class="callout warn" style="margin-top:8px">
+              <span class="icon">⚠️</span>
+              <span>이 IP 범위는 IQ Link 내부 통신에 예약됩니다. <strong>외부 장비(DNS, NTP, 데이터 소스 등)의 IP와 중복되지 않도록</strong> 주의하십시오. 중복 시 해당 장비에 접근할 수 없습니다.</span>
+            </div>
+          </div>
+        </li>
+        <li><div class="step-content"><strong>Next</strong>를 클릭합니다. <strong>Installation Result</strong> 페이지가 표시되며 설치가 완료됩니다.</div></li>
+        <li>
+          <div class="step-content">
+            설치 완료 후 브라우저에 Cisco IQ Link 로그인 페이지가 열립니다.
+            네트워크 설정 시 지정한 admin 계정과 패스워드로 로그인합니다.
+            <div class="callout tip" style="margin-top:8px">
+              <span class="icon">✅</span>
+              <span>로그인 후 홈 화면이 표시되면 설치가 성공적으로 완료된 것입니다.</span>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <span>이후 네트워크 장비 연결(Connection) 추가는 IQ Link 내 <strong>System Settings → Connection Management</strong>에서 진행합니다.</span>
+      </div>
+    </section>
+
+    <!-- ─── 8. Checklist ─────────────────────── -->
+    <section id="checklist">
+      <h2>설치 체크리스트</h2>
+      <div class="card">
+        <h4>설치 전 확인사항</h4>
+        <ul class="check" style="margin-top:10px">
+          <li>VM 사양 결정 (Device 수량에 따른 vCPU/RAM/Storage)</li>
+          <li>고정 IP 주소 확보 및 DNS A/PTR 레코드 등록</li>
+          <li>방화벽에서 아웃바운드 포트 443, 22 허용 (UDP 53, 123, 161 포함)</li>
+          <li>APJC FQDN 화이트리스트 등록: <code>ap-southeast-2.iq.cisco.com</code>, <code>ng.acs.agent.apjc.csco.cloud</code></li>
+          <li>Proxy 정보 확인 (IP, Port, 인증 여부)</li>
+          <li>IQ Link OVA / .tar.gz / KVM 패키지 다운로드 완료</li>
+          <li>Cisco IQ 포털 접속 권한 확인</li>
+          <li>SSD Thick Provisioning 600GB 스토리지 할당</li>
+          <li>디스크 쓰기 속도 70 MB/s 이상 확인</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h4>설치 완료 확인사항</h4>
+        <ul class="check" style="margin-top:10px">
+          <li>IQ Link Web UI 로그인 성공</li>
+          <li>Cisco IQ 포털의 Data Connectors 목록에 신규 IQ Link 인스턴스 표시</li>
+          <li>System Settings → NTP 동기화 상태 정상 확인</li>
+          <li>VM Snapshot 생성 완료</li>
+          <li>admin 초기 비밀번호 변경 완료</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ─── 9. Troubleshooting ───────────────── -->
+    <section id="troubleshoot">
+      <h2>문제 해결</h2>
+
+      <table>
+        <thead>
+          <tr><th>증상</th><th>원인</th><th>조치</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>인터넷 연결 테스트 실패</td>
+            <td>방화벽 차단, Proxy 설정 오류</td>
+            <td>방화벽 정책 확인, Proxy IP/Port/인증 정보 재입력</td>
+          </tr>
+          <tr>
+            <td>Device ID / Claim code 만료</td>
+            <td>5분 경과 후 자동 갱신</td>
+            <td>IQ Link Installer 페이지에서 새 코드 확인 후 재입력</td>
+          </tr>
+          <tr>
+            <td>DNS 조회 실패</td>
+            <td>DNS 서버 미등록 또는 A/PTR 레코드 누락</td>
+            <td>DNS IP 재확인, A 레코드 및 PTR 레코드 생성</td>
+          </tr>
+          <tr>
+            <td>NTP 동기화 실패</td>
+            <td>UDP 123 차단 또는 NTP 서버 미응답</td>
+            <td>NTP 서버 접근성 확인, 포트 123 허용</td>
+          </tr>
+          <tr>
+            <td>스토리지 용량 부족 경고</td>
+            <td>Thin Provisioning 사용으로 과할당</td>
+            <td>Thick Provisioning으로 재배포</td>
+          </tr>
+          <tr>
+            <td>Internal Network IP 충돌</td>
+            <td>입력한 IP 범위가 기존 장비와 겹침</td>
+            <td>사용 중인 IP 대역 확인 후 충돌 없는 범위로 재설정</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout note">
+        <span class="icon">ℹ️</span>
+        <span>추가 지원이 필요한 경우 <a href="https://mycase.cloudapps.cisco.com/start" target="_blank">Cisco Support Case</a>를 오픈하십시오. Cisco Service Contract가 필요합니다.</span>
+      </div>
+    </section>
+
+    <!-- ─── 10. References ───────────────────── -->
+    <section id="references">
+      <h2>참고 문서</h2>
+      <div class="card-grid">
+        <div class="card">
+          <h4>Cisco IQ Link Getting Started Guide</h4>
+          <p style="margin-top:6px"><a href="https://www.cisco.com/c/en/us/support/docs/cx/iq-link/cx225764-cisco-iq-link-getting-started-guide.html" target="_blank">cisco.com 공식 문서 (영문) →</a></p>
+        </div>
+        <div class="card">
+          <h4>Cisco IQ Documentation</h4>
+          <p style="margin-top:6px"><a href="https://www.cisco.com/c/en/us/support/cx/cisco-iq.html" target="_blank">cisco.com 공식 문서 (영문) →</a></p>
+        </div>
+        <div class="card">
+          <h4>Cisco IQ Getting Started Guide</h4>
+          <p style="margin-top:6px"><a href="https://www.cisco.com/c/en/us/support/docs/cx/cisco-iq/getting-started-guide/cx225778-cisco-iq-getting-started-guide.html" target="_blank">cisco.com 공식 문서 (영문) →</a></p>
+        </div>
+        <div class="card">
+          <h4>Cisco Support Case 오픈</h4>
+          <p style="margin-top:6px"><a href="https://mycase.cloudapps.cisco.com/start" target="_blank">Support Case 등록 →</a></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>본 문서는 한국 고객 운영팀의 이해를 돕기 위해 작성된 비공식 한국어 가이드입니다.</p>
+  <p style="margin-top:4px">원본 출처: <a href="https://www.cisco.com/c/en/us/support/docs/cx/iq-link/cx225764-cisco-iq-link-getting-started-guide.html" target="_blank">Cisco IQ Link Getting Started Guide v1.1.0</a> &nbsp;|&nbsp; © Cisco Systems, Inc.</p>
+</footer>
+
+<script>
+  function showTab(name, btn) {
+    // hide all tabs
+    document.querySelectorAll('.tab-content').forEach(el => {
+      el.style.display = 'none';
+      el.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+    // show selected
+    const target = document.getElementById('tab-' + name);
+    if (target) { target.style.display = 'block'; target.classList.add('active'); }
+    btn.classList.add('active');
+  }
+</script>
+
+
+</body></html>
